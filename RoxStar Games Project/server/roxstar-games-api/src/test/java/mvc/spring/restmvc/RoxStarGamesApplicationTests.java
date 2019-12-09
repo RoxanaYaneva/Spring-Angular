@@ -1,4 +1,4 @@
-package mvc.spring.roxstargamesapi;
+package mvc.spring.restmvc;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
