@@ -1,13 +1,14 @@
 package mvc.spring.restmvc.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.hateoas.Identifiable;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ import java.util.List;
 @Document(collection = "orders")
 @Data
 @AllArgsConstructor
-public class Order implements Identifiable<String> {
+public class Order {
 
     @Id
     private String id;
@@ -31,6 +32,7 @@ public class Order implements Identifiable<String> {
     private String userId;
 
     @NonNull
+    @JsonManagedReference
     private List<Game> products = new ArrayList<>();
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -39,8 +41,4 @@ public class Order implements Identifiable<String> {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updated = LocalDateTime.now();
 
-    @Override
-    public String getId() {
-        return id;
-    }
 }

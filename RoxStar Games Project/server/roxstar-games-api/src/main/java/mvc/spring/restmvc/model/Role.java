@@ -1,6 +1,7 @@
 package mvc.spring.restmvc.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import lombok.NonNull;
@@ -27,6 +28,7 @@ public class Role {
     @Length(min = 2, max = 30)
     private String name;
 
+    @JsonManagedReference
     private Collection<Permission> permissions = new ArrayList<>();
 
     @JsonCreator

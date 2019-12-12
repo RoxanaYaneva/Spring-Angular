@@ -6,14 +6,14 @@ import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.hateoas.Identifiable;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Document(collection = "games")
 @Data
 @AllArgsConstructor
-public class Game implements Identifiable<String> {
+public class Game {
 
     @Id
     private String id;
@@ -42,11 +42,8 @@ public class Game implements Identifiable<String> {
     @Length(max = 20)
     private String type;
 
-    @NonNull
     private double price;
 
-    @Override
-    public String getId() {
-        return null;
-    }
+    private List<String> imageUrls = new ArrayList<>();
+
 }

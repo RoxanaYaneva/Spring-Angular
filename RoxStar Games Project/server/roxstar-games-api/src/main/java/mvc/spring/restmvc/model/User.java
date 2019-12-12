@@ -1,16 +1,12 @@
 package mvc.spring.restmvc.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.hateoas.Identifiable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +24,7 @@ import java.util.stream.Stream;
 @NoArgsConstructor
 @JsonIgnoreProperties(value = {"authorities", "name",
         "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"})
-public class User implements UserDetails, Identifiable<String> {
+public class User implements UserDetails {
 
     @Id
     private String id;
@@ -53,7 +49,10 @@ public class User implements UserDetails, Identifiable<String> {
     @Length(min = 2, max = 30)
     private String lastName;
 
+    private String imageUrl;
+
     @NonNull
+    @JsonManagedReference
     private List<Role> roles = new ArrayList<>();
 
     private boolean active = true;
@@ -96,11 +95,6 @@ public class User implements UserDetails, Identifiable<String> {
         this.firstName= fname;
         this.lastName = lname;
         this.roles = roles;
-    }
-
-    @Override
-    public String getId() {
-        return id;
     }
 
     @Override
