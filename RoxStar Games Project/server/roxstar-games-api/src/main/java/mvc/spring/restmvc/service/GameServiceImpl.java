@@ -1,6 +1,8 @@
 package mvc.spring.restmvc.service;
 
+import lombok.extern.slf4j.Slf4j;
 import mvc.spring.restmvc.dao.GameRepository;
+import mvc.spring.restmvc.exception.EntityAlreadyExistsException;
 import mvc.spring.restmvc.exception.EntityNotFoundException;
 import mvc.spring.restmvc.model.Game;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Slf4j
 public class GameServiceImpl implements GameService {
 
     @Autowired
@@ -28,7 +31,13 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Game createGame(Game game) {
-        return repo.insert(game);
+        List<Game> result = repo.findByTitle(game.getTitle());
+        if (!result.isEmpty()) {
+            throw new EntityAlreadyExistsException(String.format("Entity already exists.", game));
+        } else {
+            log.info("Creating default user: {}", game);
+            return repo.insert(game);
+        }
     }
 
     @Override

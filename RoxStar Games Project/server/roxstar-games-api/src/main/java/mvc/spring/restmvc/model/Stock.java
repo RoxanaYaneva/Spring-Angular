@@ -1,38 +1,29 @@
 package mvc.spring.restmvc.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-@Document(collection = "orders")
+@Document(collection = "stock")
 @Data
-@AllArgsConstructor
-public class Order {
-
+@NoArgsConstructor
+public class Stock {
     @Id
     private String id;
 
     @NonNull
-    @NotNull
-    private String status;
-
-    @NonNull
     @Length(min = 24, max = 24)
-    private String userId;
+    private String productId;
 
-    @NonNull
-    @JsonManagedReference
-    private List<OrderProduct> products = new ArrayList<>();
+    @PositiveOrZero
+    private Integer quantity;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created = LocalDateTime.now();
@@ -40,4 +31,8 @@ public class Order {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updated = LocalDateTime.now();
 
+    public Stock(String productId, Integer quantity) {
+        this.productId = productId;
+        this.quantity = quantity;
+    }
 }

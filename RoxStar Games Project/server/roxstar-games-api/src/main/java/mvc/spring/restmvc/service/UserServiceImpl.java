@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -42,15 +41,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUserByEmail(String email) {
-        return repo.findByEmail(email);
-    }
-
-    @Override
-    public User createUser(@Valid User user) {
+    public User createUser(User user) {
         Optional<User> result = repo.findByEmail(user.getEmail());
         if (result.isPresent()) {
             return result.get();
+//            throw new UserAlreadyExistsException(String.format("User with email=%s already exists.", user.getEmail()));
         } else {
             user.setRegistered(LocalDateTime.now());
             user.setUpdated((LocalDateTime.now()));

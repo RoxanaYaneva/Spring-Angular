@@ -7,10 +7,11 @@ import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.GrantedAuthority;
+//import org.springframework.security.core.authority.SimpleGrantedAuthority;
+//import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,7 +25,9 @@ import java.util.stream.Stream;
 @NoArgsConstructor
 @JsonIgnoreProperties(value = {"authorities", "name",
         "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"})
-public class User implements UserDetails {
+public class User {
+
+    private static final String DEFAULT_IMAGE = "https://cdn3.iconfinder.com/data/icons/vector-icons-6/96/256-512.png";
 
     @Id
     private String id;
@@ -32,6 +35,7 @@ public class User implements UserDetails {
     @NotNull
     @NonNull
     @Length(min = 6, max = 40)
+    @Email
     private String email;
 
     @NotNull
@@ -49,7 +53,7 @@ public class User implements UserDetails {
     @Length(min = 2, max = 30)
     private String lastName;
 
-    private String imageUrl;
+    private String imageUrl = DEFAULT_IMAGE;
 
     @NonNull
     @JsonManagedReference
@@ -97,45 +101,45 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .flatMap(role ->
-                        Stream.concat(
-                                Stream.of(new SimpleGrantedAuthority(role.getName())),
-                                role.getPermissions().stream().map(perm -> new SimpleGrantedAuthority(perm.toString()))
-
-                        )
-                ).collect(Collectors.toSet());
-    }
-
-    @JsonIgnore
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return active;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return active;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return active;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return active;
-    }
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return roles.stream()
+//                .flatMap(role ->
+//                        Stream.concat(
+//                                Stream.of(new SimpleGrantedAuthority(role.getName())),
+//                                role.getPermissions().stream().map(perm -> new SimpleGrantedAuthority(perm.toString()))
+//
+//                        )
+//                ).collect(Collectors.toSet());
+//    }
+//
+//    @JsonIgnore
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    @Override
+//    public String getUsername() {
+//        return email;
+//    }
+//
+//    @Override
+//    public boolean isAccountNonExpired() {
+//        return active;
+//    }
+//
+//    @Override
+//    public boolean isAccountNonLocked() {
+//        return active;
+//    }
+//
+//    @Override
+//    public boolean isCredentialsNonExpired() {
+//        return active;
+//    }
+//
+//    @Override
+//    public boolean isEnabled() {
+//        return active;
+//    }
 }
