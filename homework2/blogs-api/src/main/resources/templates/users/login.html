@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head th:replace="layout :: site-head">
+        <title>Login</title>
+    </head>
+    <body>
+        <header th:replace="layout :: site-header" />
+        <h1 sec:authorize="isAuthenticated()">You are already logged in!</h1>
+        <div sec:authorize="isAuthenticated() == false">
+            <h1>Login in the Blog</h1>
+            <form method="post" th:object="${loginForm}" th:action="@{/api/login}">
+<!--                <div th:if="${param.logout}">-->
+<!--                    <div class="alert alert-danger">You logged out. Log in again?</div>-->
+<!--                </div>-->
+                <div th:if="${param.error}">
+                    <div class="alert alert-danger">Invalid username or password.</div>
+                </div>
+                <div th:if="${param.logout}">
+                    <div class="alert alert-info">You have been logged out.</div>
+                </div>
+                <div><label for="email">Email:</label></div>
+                <input id="email" type="text" name="email" th:value="*{email}" />
+                <span class="formError" th:if="${#fields.hasErrors('email')}"
+                      th:errors="*{email}">Invalid email</span>
+                <div><label for="password" th:value="*{email}">Password:</label></div>
+                <input id="password" type="password" name="password" th:value="*{password}" />
+                <span class="formError" th:if="${#fields.hasErrors('password')}"
+                      th:errors="*{password}">Invalid password</span>
+                <div><input class="button" type="submit" value="Login"/>
+                    <a href="register.html" th:href="@{/api/register}">[Go to Register]</a>
+                </div>
+            </form>
+        </div>
+        <footer th:replace="layout :: site-footer" />
+    </body>
+</html>

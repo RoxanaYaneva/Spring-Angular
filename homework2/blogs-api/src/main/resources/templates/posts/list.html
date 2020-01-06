@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="layout :: site-head">
+    <title>Post</title>
+</head>
+<body>
+<header th:replace="layout :: site-header" />
+<h1>Post list</h1>
+    <div>
+        <table id="list">
+            <thead>
+            <tr>
+                <th> Title </th>
+                <th> Author </th>
+                <th> Published</th>
+                <th> Status </th>
+                <th sec:authorize="hasRole('ROLE_ADMIN')"> Actions </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${posts == null || posts.empty}">
+                <td colspan="5"> No Posts Available </td>
+            </tr>
+            <tr th:each="post : ${posts}">
+                <td><span th:text="${post.title}"> Title </span></td>
+                <td><span th:text="${post.authorId}"> Author </span></td>
+                <td><span th:text="${post.published}"> Published </span></td>
+                <td><span th:text="${post.status}"> Status </span></td>
+                <td sec:authorize="hasRole('ROLE_ADMIN')">
+                    <ul class="actions">
+                        <form method="get" th:action=@{/api/posts/view/{id}(id=${post.id})}>
+                            <input class="button" type="submit" value="View"/>
+                        </form>
+                        <form method="get" th:action=@{/api/posts/edit/{id}(id=${post.id})}>
+                            <input class="button" type="submit" value="Edit"/>
+                        </form>
+                        <form method="get" th:action=@{/api/posts/delete/{id}(id=${post.id})}>
+                            <input class="button" type="submit" value="Delete"/>
+                        </form>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+<footer th:replace="layout :: site-footer" />
+</body>
+</html>

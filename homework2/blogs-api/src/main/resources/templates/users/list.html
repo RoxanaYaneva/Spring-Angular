@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head th:replace="layout :: site-head">
+        <title>Users</title>
+    </head>
+    <body>
+        <header th:replace="layout :: site-header" />
+        <h1>User list</h1>
+        <div>
+            <table id="list">
+                <thead>
+                <tr>
+                    <th> Email </th>
+                    <th> Fist name </th>
+                    <th> Last name </th>
+                    <th> Active </th>
+                    <th sec:authorize="hasRole('ROLE_ADMIN')"> Actions </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${users == null || users.empty}">
+                    <td colspan="5"> No Users Available </td>
+                </tr>
+                <tr th:each="user : ${users}">
+                    <td><span th:text="${user.email}"> Email </span></td>
+                    <td><span th:text="${user.firstName}"> First name </span></td>
+                    <td><span th:text="${user.lastName}"> Last name </span></td>
+                    <td><span th:text="${user.active}"> Active </span></td>
+                    <td sec:authorize="hasRole('ROLE_ADMIN')">
+                        <ul class="actions">
+                            <form method="get" th:action=@{/api/users/edit/{id}(id=${user.id})}>
+                                <input class="button" type="submit" value="Edit"/>
+                            </form>
+                            <form method="post" th:action=@{/api/users/activate/{id}(id=${user.id})}>
+                                <input class="button" type="submit" value="Activate"/>
+                            </form>
+                            <form method="post" th:action=@{/api/users/deactivate/{id}(id=${user.id})}>
+                                <input class="button" type="submit" value="Deactivate"/>
+                            </form>
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <footer th:replace="layout :: site-footer" />
+    </body>
+</html>

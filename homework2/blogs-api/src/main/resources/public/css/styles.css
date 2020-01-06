@@ -1,0 +1,138 @@
+body {
+    margin: 10px 400px;
+    text-align: center;
+}
+
+body>header {
+    background: #eee;
+    padding: 5px;
+    height: 80px;
+    text-align: left;
+}
+
+.button {
+    margin: 5px;
+    font-weight: bold;
+    color: black;
+    background-color: #1cc4c7;
+    font-size: 18px;
+    width: 130px;
+    border-color: black;
+}
+
+input {
+    width: 300px;
+    height: 40px;
+}
+
+body>header>a>img, body>header a {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0px 5px;
+    font-size: 1.2em;
+}
+
+body>footer {
+    background: #eee;
+    padding: 5px;
+    margin: 10px 0;
+    text-align: center;
+}
+
+#logged-in-info {
+    float: right;
+    margin-top: 18px;
+}
+
+#logged-in-info form {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+body>aside {
+  float: right;
+  width: 200px;
+  background: #CCC;
+  padding: 15px;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+body>aside h2 {
+    margin: 5px 0px 15px 0px;
+}
+
+body>aside a {
+    display: block;
+    margin: 5px 0px;
+    text-decoration: none;
+}
+
+body>main:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+ul#messages li {
+    display: block;
+    width: 80%;
+    margin: 5px auto;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+textarea {
+    width: 300px;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+ul#messages li.info {
+    background: #7f7;
+}
+
+ul#messages li.error {
+    background: #d00;
+    color: white;
+}
+
+.formError {
+    color: red;
+    font-style: italic;
+}
+
+#list {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.content {
+    text-align: justify;
+}
+
+.actions {
+    list-style: none;
+}
+
+.actions button {
+    width: 90px;
+}
+
+#list td, #list th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#list tr:nth-child(even){background-color: #f2f2f2;}
+
+#list tr:hover {background-color: #ddd;}
+
+#list th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #1cc4c7;
+    color: white;
+}

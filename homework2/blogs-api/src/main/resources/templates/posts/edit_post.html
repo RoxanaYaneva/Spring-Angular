@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head th:replace="layout :: site-head">
+        <title>Edit User</title>
+    </head>
+    <body>
+        <header th:replace="layout :: site-header" />
+        <h1>Edit post</h1>
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">Invalid data.</div>
+        </div>
+        <form action="#"
+              th:action="@{/api/posts/update/{id}(id=${post.id})}"
+              th:object="${post}"
+              method="post">
+            <div><label for="file">Image:</label></div>
+            <input type="file" name="imageUrl" th:value="*{imageUrl}" id="file">
+            <div><label for="title">Title:</label></div>
+            <input id="title" type="text" name="title" th:value="*{title}" />
+            <span class="formError" th:if="${#fields.hasErrors('title')}"
+                  th:errors="*{title}">Invalid title</span>
+            <div><label for="authorId" th:value="*{authorId}">Author id:</label></div>
+            <input id="authorId" type="authorId" name="authorId" th:value="*{authorId}" />
+            <div><label for="text" th:value="*{text}">Text:</label></div>
+            <textarea id="text" type="text" name="text" th:value="*{text}" ></textarea>
+            <div><label for="tags" th:value="*{tags}">Tags:</label></div>
+            <input id="tags" type="tags" name="tags" th:value="*{tags}" />
+            <div><input class="button" type="submit" value="Update Post"></div>
+        </form>
+    </body>
+    <footer th:replace="layout :: site-footer" />
+</html>
