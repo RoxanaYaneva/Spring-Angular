@@ -8,6 +8,9 @@
         <div th:if="${param.success}">
             <div class="alert alert-info">You've successfully registered! Now you can log in.</div>
         </div>
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">Invalid data.</div>
+        </div>
         <h1 sec:authorize="isAuthenticated()">You are already logged in!</h1>
         <div sec:authorize="!isAuthenticated()">
             <h1>Register in the Blog</h1>

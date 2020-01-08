@@ -22,9 +22,9 @@
             <div><label for="authorId" th:value="*{authorId}">Author id:</label></div>
             <input id="authorId" type="authorId" name="authorId" th:value="*{authorId}" />
             <div><label for="text" th:value="*{text}">Text:</label></div>
-            <textarea id="text" type="text" name="text" th:value="*{text}" ></textarea>
+            <textarea class="textarea" id="text" type="text" name="text" th:inline="text"> [[*{text}]] </textarea>
             <div><label for="tags" th:value="*{tags}">Tags:</label></div>
-            <input id="tags" type="tags" name="tags" th:value="*{tags}" />
+            <input id="tags" type="text" name="tags" th:value="*{#strings.listJoin(#messages.listMsg(tags), ',')}" />
             <div><input class="button" type="submit" value="Update Post"></div>
         </form>
     </body>

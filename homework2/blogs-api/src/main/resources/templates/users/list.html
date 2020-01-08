@@ -14,7 +14,7 @@
                     <th> Fist name </th>
                     <th> Last name </th>
                     <th> Active </th>
-                    <th sec:authorize="hasRole('ROLE_ADMIN')"> Actions </th>
+                    <th> Actions </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -26,16 +26,13 @@
                     <td><span th:text="${user.firstName}"> First name </span></td>
                     <td><span th:text="${user.lastName}"> Last name </span></td>
                     <td><span th:text="${user.active}"> Active </span></td>
-                    <td sec:authorize="hasRole('ROLE_ADMIN')">
+                    <td>
                         <ul class="actions">
-                            <form method="get" th:action=@{/api/users/edit/{id}(id=${user.id})}>
-                                <input class="button" type="submit" value="Edit"/>
+                            <form sec:authorize="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')" method="get" th:action=@{/api/users/edit/{id}(id=${user.id})}>
+                                <input class="button green-button" type="submit" value="Edit"/>
                             </form>
-                            <form method="post" th:action=@{/api/users/activate/{id}(id=${user.id})}>
-                                <input class="button" type="submit" value="Activate"/>
-                            </form>
-                            <form method="post" th:action=@{/api/users/deactivate/{id}(id=${user.id})}>
-                                <input class="button" type="submit" value="Deactivate"/>
+                            <form sec:authorize="hasRole('ROLE_ADMIN')" method="post" th:action=@{/api/users/status/{id}(id=${user.id})}>
+                                <input class="button" type="submit" value="(De)activate"/>
                             </form>
                         </ul>
                     </td>

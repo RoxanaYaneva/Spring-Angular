@@ -13,7 +13,7 @@ public class PostForm {
     private String title;
 
     @NotNull
-    @Size(max=250, message = "Maximum 250 characters!")
+    @Size(max=500, message = "Maximum 500 characters!")
     private String text;
 
     private String imageUrl;

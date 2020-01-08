@@ -9,15 +9,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
 @Slf4j
 public class PostController {
+
+    private static final String UPLOADS_DIR = "tmp";
 
     @Autowired
     private PostService postService;
@@ -44,6 +51,7 @@ public class PostController {
             return "redirect:/";
         }
         model.addAttribute("post", post);
+        log.info(post.toString());
         return "posts/view";
     }
 
@@ -60,6 +68,7 @@ public class PostController {
             log.info(bindingResult.getAllErrors().toString());
             return "posts/edit_post";
         }
+        post.setId(postId);
         postService.updatePost(post);
         model.addAttribute("post", post);
         return "redirect:/api/posts/view/" + post.getId();
@@ -76,11 +85,9 @@ public class PostController {
     @RequestMapping(value = "/api/posts", method = RequestMethod.POST)
     public String addPost(@Valid PostForm postForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "posts/create_post?error";
+            return "posts/create_post";
         }
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        log.info(auth.getName());
 
         Post post = new Post();
         post.setTitle(postForm.getTitle());
@@ -92,4 +99,24 @@ public class PostController {
         model.addAttribute("post", created);
         return "redirect:/api/posts/view/" + created.getId();
     }
+
+    private void handleMultipartFile(MultipartFile file) {
+        String name = file.getOriginalFilename();
+        long size = file.getSize();
+        log.info("File: " + name + ", Size: " + size);
+        try {
+            File currentDir = new File(UPLOADS_DIR);
+            if(!currentDir.exists()) {
+                currentDir.mkdirs();
+            }
+            String path = currentDir.getAbsolutePath() + "/" + file.getOriginalFilename();
+            path = new File(path).getAbsolutePath();
+            log.info(path);
+            File f = new File(path);
+            FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(f));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }

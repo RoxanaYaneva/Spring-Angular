@@ -17,7 +17,7 @@
         <a href="posts/create_post.html" th:href=@{/api/posts/form}>Create Post</a>
         <a href="users/list_users.html" th:href=@{/api/users}>Users</a>
         <div sec:authorize="isAuthenticated()" id="logged-in-info"> Hello, <span sec:authentication="principal.username">User</span>
-            <form method="post" th:action=@{/api/login?logout}>
+            <form method="post" th:action=@{/api/logout}>
                 <input class="button" type="submit" value="Logout"/>
             </form>
         </div>

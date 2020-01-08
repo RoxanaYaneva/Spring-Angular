@@ -12,30 +12,32 @@
             <tr>
                 <th> Title </th>
                 <th> Author </th>
+                <th> Text </th>
                 <th> Published</th>
                 <th> Status </th>
-                <th sec:authorize="hasRole('ROLE_ADMIN')"> Actions </th>
+                <th> Actions </th>
             </tr>
             </thead>
             <tbody>
             <tr th:if="${posts == null || posts.empty}">
-                <td colspan="5"> No Posts Available </td>
+                <td colspan="6"> No Posts Available </td>
             </tr>
             <tr th:each="post : ${posts}">
                 <td><span th:text="${post.title}"> Title </span></td>
                 <td><span th:text="${post.authorId}"> Author </span></td>
-                <td><span th:text="${post.published}"> Published </span></td>
+                <td><span th:text="${post.text}"> Text </span></td>
+                <td><span th:text="${#temporals.format(post.published,'dd.MM.yyyy')}"> Published </span></td>
                 <td><span th:text="${post.status}"> Status </span></td>
-                <td sec:authorize="hasRole('ROLE_ADMIN')">
+                <td>
                     <ul class="actions">
                         <form method="get" th:action=@{/api/posts/view/{id}(id=${post.id})}>
                             <input class="button" type="submit" value="View"/>
                         </form>
-                        <form method="get" th:action=@{/api/posts/edit/{id}(id=${post.id})}>
-                            <input class="button" type="submit" value="Edit"/>
+                        <form sec:authorize="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')" method="get" th:action=@{/api/posts/edit/{id}(id=${post.id})}>
+                            <input class="button green-button" type="submit" value="Edit"/>
                         </form>
-                        <form method="get" th:action=@{/api/posts/delete/{id}(id=${post.id})}>
-                            <input class="button" type="submit" value="Delete"/>
+                        <form sec:authorize="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')" method="get" th:action=@{/api/posts/delete/{id}(id=${post.id})}>
+                            <input class="button red-button" type="submit" value="Delete"/>
                         </form>
                     </ul>
                 </td>

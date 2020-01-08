@@ -15,7 +15,7 @@ public class RegisterForm {
     private String email;
 
     @NotNull
-    @Size(min=1, max=50)
+    @Size(min=8, max=100)
     private String password;
 
     @NotNull

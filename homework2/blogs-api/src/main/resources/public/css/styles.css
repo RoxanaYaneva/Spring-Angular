@@ -13,11 +13,12 @@ body>header {
 .button {
     margin: 5px;
     font-weight: bold;
-    color: black;
-    background-color: #1cc4c7;
+    color: white;
     font-size: 18px;
     width: 130px;
-    border-color: black;
+    border: none;
+    background-color: #1cc4c7;
+    border-radius: 5px;
 }
 
 input {
@@ -50,12 +51,12 @@ body>footer {
 }
 
 body>aside {
-  float: right;
-  width: 200px;
-  background: #CCC;
-  padding: 15px;
-  margin-left: 20px;
-  margin-top: 10px;
+    float: right;
+    width: 200px;
+    background: #CCC;
+    padding: 15px;
+    margin-left: 20px;
+    margin-top: 10px;
 }
 
 body>aside h2 {
@@ -83,8 +84,9 @@ ul#messages li {
     border-radius: 5px;
 }
 
-textarea {
+.textarea {
     width: 300px;
+    height: 150px;
     border-radius: 5px;
     padding: 5px;
 }
@@ -135,4 +137,38 @@ ul#messages li.error {
     padding-bottom: 12px;
     background-color: #1cc4c7;
     color: white;
+}
+
+.alert {
+    width: 300px;
+    color: white;
+    margin: 5px auto;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.alert-info {
+    background-color: green;
+}
+
+.alert-danger {
+    background-color: red;
+}
+
+.green-button {
+    background-color: green;
+}
+
+.red-button {
+    background-color: red;
+}
+
+.tag {
+    color: white;
+    background-color: #1cc4c7;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
 }

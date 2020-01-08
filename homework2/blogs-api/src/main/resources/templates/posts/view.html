@@ -10,14 +10,16 @@
                 <h2 class="title" th:text="${post.title}">Post Title</h2>
                 <div class="date">
                     <i>Posted on</i>
-                    <span th:text="${post.published}">22-May-2016</span>
+                    <span th:text="${#temporals.format(post.published,'dd.MM.yyyy HH:mm:ss')}">22-May-2016</span>
                     <span th:if="${post.authorId}" th:remove="tag">
                 <i>by</i>
                 <span th:text="${post.authorId}">Roxana Yaneva</span>
                 </span>
                 </div>
                 <p class="content" th:utext="${post.text}">Post content</p>
-                <div th:text="${post.tags}"> </div>
+                <div th:each="tag : ${post.tags}">
+                    <span class="tag" th:text="${tag}"> </span>
+                </div>
             </article>
         </main>
         <footer th:replace="layout :: site-footer" />

@@ -80,7 +80,9 @@ public class UserServiceImpl implements UserService {
                 log.info(">>> Expanded roles: {}", expandedRoles);
                 user.setRoles(expandedRoles);
             }
+            log.info(user.getPassword());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            log.info(user.getPassword());
             user.setActive(true);
             log.info("Creating default user: {}", user);
             return repo.insert(user);
@@ -88,7 +90,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @PreAuthorize("#email == authentication.name or hasAuthority('ALL_USER_UPDATE')")
+//    @PreAuthorize("#email == authentication.name or hasAuthority('ALL_USER_UPDATE')")
     public User updateUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return repo.save(user);
@@ -104,14 +106,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        log.info(getAllUsers().toString());
         Optional<User> result = repo.findByEmail(email);
         if (!result.isPresent()) {
-            throw new UsernameNotFoundException("Invalid username or password.");
+            throw new UsernameNotFoundException("Invalid email or password.");
         }
+        log.info(result.get().getPassword());
         return new org.springframework.security.core.userdetails.User(result.get().getEmail(),
             result.get().getPassword(),
             mapRolesToAuthorities(result.get().getRoles()));
-
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {

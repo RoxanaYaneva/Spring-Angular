@@ -11,7 +11,7 @@
               th:object="${user}"
               method="post">
             <div><label for="email">Email:</label></div>
-            <div><input type="text" th:field="*{email}" id="email" placeholder="Email"></div>
+            <div><input type="text" th:field="*{email}" id="email" placeholder="Email" readonly></div>
             <span class='formError' th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
             <div><label for="password">Password:</label></div>
             <div><input type="password" th:field="*{password}" id="password" placeholder="Password"></div>
@@ -22,6 +22,8 @@
             <div><label for="lastName">Last name:</label></div>
             <div><input type="text" th:field="*{lastName}" id="lastName" placeholder="Last name"></div>
             <span class='formError' th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+            <div><input style="display: none" type="text" th:field="*{active}" id="active"></div>
+            <div><input style="display: none" type="text" th:field="*{roles}" id="roles"></div>
             <div><input class="button" type="submit" value="Update User"></div>
         </form>
         <footer th:replace="layout :: site-footer" />

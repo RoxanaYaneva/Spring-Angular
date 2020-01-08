@@ -53,7 +53,7 @@ public class DataInitializer implements ApplicationRunner {
         Role roleAdmin = roleService.createIfNotExist(new Role(ROLE_ADMIN, Arrays.asList(postsCreate, postsRead, postsUpdate, postsDelete, usersCreate, usersRead, usersUpdate, usersDelete)));
 
 
-//        userService.createUser(new User("admin@gmail.com", "admin", "DEFAULT", "ADMIN",
+//        userService.createUser(new User("admin@gmail.com", "admin123", "DEFAULT", "ADMIN",
 //                Arrays.asList(roleAdmin)));
     }
 }

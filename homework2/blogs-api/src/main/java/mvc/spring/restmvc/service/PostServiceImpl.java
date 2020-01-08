@@ -45,7 +45,6 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ALL_POST_DELETE')")
     public Post deletePost(String postId) {
         Post old = getPostById(postId);
         repo.deleteById(postId);
