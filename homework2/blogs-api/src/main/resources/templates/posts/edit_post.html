@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns="http://www.w3.org/1999/html">
     <head th:replace="layout :: site-head">
         <title>Edit User</title>
     </head>
@@ -13,12 +14,16 @@
               th:action="@{/api/posts/update/{id}(id=${post.id})}"
               th:object="${post}"
               method="post">
-            <div><label for="file">Image:</label></div>
-            <input type="file" name="imageUrl" th:value="*{imageUrl}" id="file">
+<!--            <div><label for="file">Image:</label></div>-->
+            <input type="hidden" name="imageUrl" th:value="*{imageUrl}" id="file">
             <div><label for="title">Title:</label></div>
             <input id="title" type="text" name="title" th:value="*{title}" />
             <span class="formError" th:if="${#fields.hasErrors('title')}"
                   th:errors="*{title}">Invalid title</span>
+            <div>
+                <input style="width: 20px" type="radio" name="status" th:field="*{status}" th:value="active" />active
+                <input style="width: 20px; margin-bottom: 10px" type="radio" name="status" th:field="*{status}" th:value="inactive" />inactive
+            </div>
             <div><label for="authorId" th:value="*{authorId}">Author id:</label></div>
             <input id="authorId" type="authorId" name="authorId" th:value="*{authorId}" />
             <div><label for="text" th:value="*{text}">Text:</label></div>

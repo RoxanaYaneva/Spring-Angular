@@ -5,6 +5,7 @@ import mvc.spring.restmvc.forms.PostForm;
 import mvc.spring.restmvc.service.PostService;
 import mvc.spring.restmvc.model.Post;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -18,7 +19,9 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Controller
 @Slf4j
@@ -36,7 +39,18 @@ public class PostController {
 
     @RequestMapping(value = "/api/posts", method = RequestMethod.GET)
     public String getPosts(Model model) {
-        List<Post> posts = postService.getAllPosts();
+        List<Post> posts = postService.getTop15ByPublishedDesc();
+        if (posts.isEmpty()) {
+            return "posts/list";
+        }
+        model.addAttribute("posts", posts);
+        return "posts/list";
+    }
+
+    @RequestMapping(value = "/api/posts/status/{status}", method = RequestMethod.GET)
+    public String getPosts(@PathVariable("status") String status, Model model) {
+        List<Post> posts = postService.getAllPostsByStatus(status);
+        posts.sort((p2, p1) -> p1.getPublished().compareTo(p2.getPublished()));
         if (posts.isEmpty()) {
             return "posts/list";
         }
@@ -83,13 +97,23 @@ public class PostController {
     }
 
     @RequestMapping(value = "/api/posts", method = RequestMethod.POST)
-    public String addPost(@Valid PostForm postForm, BindingResult bindingResult, Model model) {
+    public String addPost(@Valid PostForm postForm, BindingResult bindingResult, @RequestParam("file") MultipartFile file, Model model) {
         if (bindingResult.hasErrors()) {
             return "posts/create_post";
         }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         Post post = new Post();
+        if (!file.isEmpty() && file.getOriginalFilename().length() > 0) {
+            if (Pattern.matches("\\w+\\.(jpg|png)", file.getOriginalFilename())) {
+                handleMultipartFile(file);
+                post.setImageUrl(file.getOriginalFilename());
+            } else {
+                model.addAttribute("fileError", "Submit picture [.jpg, .png]");
+                return "posts/create_post";
+            }
+        }
+
         post.setTitle(postForm.getTitle());
         post.setText(postForm.getText());
         post.setTags(postForm.getTags());

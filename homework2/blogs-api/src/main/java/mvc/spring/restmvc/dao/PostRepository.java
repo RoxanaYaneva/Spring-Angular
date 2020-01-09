@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends MongoRepository<Post, String> {
-//    List<Post> findFirst15OrderByPublishedDesc();
+    List<Post> findTop15ByOrderByPublishedDesc();
+    List<Post> findByStatus(String status);
     List<Post> findByAuthorId(String authorId);
 }

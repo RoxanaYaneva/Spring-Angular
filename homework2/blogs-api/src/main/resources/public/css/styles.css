@@ -167,8 +167,11 @@ ul#messages li.error {
 .tag {
     color: white;
     background-color: #1cc4c7;
-    margin: 5px;
     padding: 5px;
     border-radius: 5px;
-    display: inline-block;
+}
+
+.img-thumbnail {
+    width: 500px;
+    height: auto;
 }

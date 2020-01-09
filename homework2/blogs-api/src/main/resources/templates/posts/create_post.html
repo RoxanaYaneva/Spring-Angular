@@ -7,9 +7,12 @@
         <header th:replace="layout :: site-header" />
         <h1>Create post</h1>
         <div>
-            <form method="post" th:object="${postForm}" th:action="@{/api/posts}">
+            <form method="post" th:object="${postForm}" th:action="@{/api/posts}" enctype="multipart/form-data">
                 <div><label for="file">Image:</label></div>
-                <input type="file" name="imageUrl" th:value="*{imageUrl}" id="file">
+                <input type="hidden" th:value="*{imageUrl}" id="imageUrl" name="imageUrl" title="Article picture URL">
+                <div class="custom-file">
+                    <input type="file" id="file" name="file" class="custom-file-input" th:value="*{imageUrl}">
+                </div>
                 <div><label for="title">Title:</label></div>
                 <input id="title" type="text" name="title" th:value="*{title}" required />
                 <span class="formError" th:if="${#fields.hasErrors('title')}"

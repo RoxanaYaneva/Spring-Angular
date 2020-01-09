@@ -22,6 +22,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @PostFilter("filterObject.authorId == authentication.name or hasAuthority('ALL_POST_READ')")
+    public List<Post> getTop15ByPublishedDesc() {
+        return repo.findTop15ByOrderByPublishedDesc();
+    }
+
+    @Override
+    public List<Post> getAllPostsByStatus(String status) {
+        return repo.findByStatus(status);
+    }
+
+    @Override
     public List<Post> getByAuthorId(String authorId) {
         return repo.findByAuthorId(authorId);
     }
@@ -39,7 +50,6 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @PreAuthorize("(#authorId == authentication.name and #authorId == #post.authorId ) or hasAuthority('ALL_POST_UPDATE')")
     public Post updatePost(Post post) {
         return repo.save(post);
     }

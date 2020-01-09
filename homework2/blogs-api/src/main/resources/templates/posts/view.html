@@ -16,12 +16,22 @@
                 <span th:text="${post.authorId}">Roxana Yaneva</span>
                 </span>
                 </div>
-                <p class="content" th:utext="${post.text}">Post content</p>
+                <div>
+                    <a href="#"  data-toggle="modal"
+                       th:data-image-url="${'/uploads/' + post.imageUrl}"
+                       th:data-image-title="${post.title}">
+                        <img class="img-thumbnail" th:if="${post.imageUrl != null}"
+                             th:src="${'/uploads/' + post.imageUrl}">
+                    </a>
+                    <p class="content" th:utext="${post.text}">Post content</p>
+                </div>
+                <br>
                 <div th:each="tag : ${post.tags}">
                     <span class="tag" th:text="${tag}"> </span>
                 </div>
             </article>
         </main>
+        </div>
         <footer th:replace="layout :: site-footer" />
     </body>
 </html>
