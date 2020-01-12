@@ -5,7 +5,6 @@ import mvc.spring.restmvc.forms.PostForm;
 import mvc.spring.restmvc.service.PostService;
 import mvc.spring.restmvc.model.Post;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,6 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -40,6 +38,7 @@ public class PostController {
     @RequestMapping(value = "/api/posts", method = RequestMethod.GET)
     public String getPosts(Model model) {
         List<Post> posts = postService.getTop15ByPublishedDesc();
+        model.addAttribute("status", "all");
         if (posts.isEmpty()) {
             return "posts/list";
         }
@@ -48,12 +47,13 @@ public class PostController {
     }
 
     @RequestMapping(value = "/api/posts/status/{status}", method = RequestMethod.GET)
-    public String getPosts(@PathVariable("status") String status, Model model) {
+    public String getPostsByStatus(@PathVariable("status") String status, Model model) {
         List<Post> posts = postService.getAllPostsByStatus(status);
         posts.sort((p2, p1) -> p1.getPublished().compareTo(p2.getPublished()));
         if (posts.isEmpty()) {
             return "posts/list";
         }
+        model.addAttribute("status", status);
         model.addAttribute("posts", posts);
         return "posts/list";
     }
@@ -65,7 +65,6 @@ public class PostController {
             return "redirect:/";
         }
         model.addAttribute("post", post);
-        log.info(post.toString());
         return "posts/view";
     }
 
@@ -79,7 +78,6 @@ public class PostController {
     @RequestMapping(value = "/api/posts/update/{postId}", method = RequestMethod.POST)
     public String updatePost(@PathVariable("postId") String postId, @Valid Post post, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            log.info(bindingResult.getAllErrors().toString());
             return "posts/edit_post";
         }
         post.setId(postId);

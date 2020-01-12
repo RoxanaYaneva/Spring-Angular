@@ -54,20 +54,14 @@ public class UserServiceImpl implements UserService {
     public User getUserById(String id) {
         if (id == null) return null;
         return repo.findById(id).orElseThrow(() ->
-                new EntityNotFoundException(String.format("User with id=%s does not exist", id)));
-    }
-
-    @Override
-    public User getUserByEmail(@NonNull String email) {
-        return repo.findByEmail(email).orElseThrow(() ->
-                new EntityNotFoundException(String.format("User with email=%s does not exist", email)));
+                new EntityNotFoundException(String.format("User with id %s does not exist", id)));
     }
 
     @Override
     public User createUser(User user) {
         Optional<User> result = repo.findByEmail(user.getEmail());
         if (result.isPresent()) {
-            throw new UserAlreadyExistsException(String.format("User with email=%s already exists.", user.getEmail()));
+            throw new UserAlreadyExistsException(String.format("User with email %s already exists.", user.getEmail()));
         } else {
             if (user.getRoles() == null || user.getRoles().isEmpty()) {
                 user.setRoles(Arrays.asList(roleService.getRoleByName(ROLE_USER).get()));
@@ -80,9 +74,7 @@ public class UserServiceImpl implements UserService {
                 log.info(">>> Expanded roles: {}", expandedRoles);
                 user.setRoles(expandedRoles);
             }
-            log.info(user.getPassword());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            log.info(user.getPassword());
             user.setActive(true);
             log.info("Creating default user: {}", user);
             return repo.insert(user);
@@ -106,12 +98,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        log.info(getAllUsers().toString());
         Optional<User> result = repo.findByEmail(email);
         if (!result.isPresent()) {
             throw new UsernameNotFoundException("Invalid email or password.");
         }
-        log.info(result.get().getPassword());
         return new org.springframework.security.core.userdetails.User(result.get().getEmail(),
             result.get().getPassword(),
             mapRolesToAuthorities(result.get().getRoles()));

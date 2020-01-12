@@ -33,7 +33,6 @@ public class AuthController {
     @RequestMapping(value = "/api/register", method = RequestMethod.POST)
     public String registerPage(@Valid RegisterForm registerForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            log.info(bindingResult.getAllErrors().toString());
             return "redirect:/api/register?error";
         }
         User user = new User();

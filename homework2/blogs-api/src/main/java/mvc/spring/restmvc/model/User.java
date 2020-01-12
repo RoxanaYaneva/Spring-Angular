@@ -56,7 +56,7 @@ public class User {
 
     public User(String id,
                 @NotNull @Length(min = 6, max = 40) String email,
-                @NotNull @Length(min = 8, max = 30) String password,
+                @NotNull @Length(min = 8, max = 100) String password,
                 @NotNull @Length(min = 2, max = 30) String fname,
                 @NotNull @Length(min = 2, max = 30) String lname,
                 List<Role> roles,
@@ -73,7 +73,7 @@ public class User {
     @JsonCreator
     @java.beans.ConstructorProperties({"email", "password", "firstName", "lastName", "roles"})
     public User(@NotNull @Length(min = 6, max = 40) String email,
-                @Length(min = 8, max = 30) String password,
+                @Length(min = 8, max = 100) String password,
                 @Length(min = 2, max = 30) String fname,
                 @Length(min = 2, max = 30) String lname,
                 List<Role> roles) {

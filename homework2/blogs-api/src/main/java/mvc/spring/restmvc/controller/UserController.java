@@ -1,8 +1,6 @@
 package mvc.spring.restmvc.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import mvc.spring.restmvc.exception.EntityNotFoundException;
-import mvc.spring.restmvc.exception.UserAlreadyExistsException;
 import mvc.spring.restmvc.service.UserService;
 import mvc.spring.restmvc.model.User;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -28,6 +28,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @PostFilter("filterObject.authorId == authentication.name or hasAuthority('ALL_POST_READ')")
     public List<Post> getAllPostsByStatus(String status) {
         return repo.findByStatus(status);
     }
