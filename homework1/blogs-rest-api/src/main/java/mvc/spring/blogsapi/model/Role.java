@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -24,7 +22,6 @@ public class Role {
     private String id;
 
     @NonNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     private String name;
 
     @NonNull

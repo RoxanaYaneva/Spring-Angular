@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
@@ -24,10 +26,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().cacheControl().disable();
-        http.cors().and().csrf().disable();
+        http.csrf().disable();
+
         http
                 .authorizeRequests()
                 .antMatchers(
@@ -40,15 +46,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .usernameParameter("email")
                 .permitAll()
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(new SimpleUrlAuthenticationFailureHandler())
                 .and()
                 .logout()
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/api/logout"))
                 .logoutSuccessUrl("/api/login?logout")
-                .permitAll()
-                .and()
-                .httpBasic();
+                .permitAll();
     }
 
     @Bean

@@ -1,7 +1,6 @@
 package mvc.spring.blogsapi.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -17,8 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(value = {"authorities", "name",
-        "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"})
 public class User {
     @Id
     private String id;
