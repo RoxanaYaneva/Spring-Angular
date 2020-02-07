@@ -1,6 +1,5 @@
 package mvc.spring.restmvc.service;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import mvc.spring.restmvc.dao.UserRepository;
 import mvc.spring.restmvc.exception.EntityNotFoundException;
@@ -8,6 +7,7 @@ import mvc.spring.restmvc.exception.UserAlreadyExistsException;
 import mvc.spring.restmvc.model.Role;
 import mvc.spring.restmvc.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,9 +25,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static mvc.spring.restmvc.model.Role.ROLE_USER;
-
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 
 @Service

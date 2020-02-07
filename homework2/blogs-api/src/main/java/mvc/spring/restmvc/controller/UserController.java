@@ -1,13 +1,15 @@
 package mvc.spring.restmvc.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import mvc.spring.restmvc.service.UserService;
 import mvc.spring.restmvc.model.User;
+import mvc.spring.restmvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 import java.util.List;

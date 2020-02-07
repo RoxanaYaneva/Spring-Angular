@@ -16,9 +16,9 @@
                 <th> Published</th>
                 <th> Status
                     <select th:onchange="location = this.value;">
-                        <option th:selected="${status == 'all'}" th:text="all" th:value=@{/api/posts}>all</option>
-                        <option th:selected="${status == 'active'}" th:text="active" th:value=@{/api/posts/status/active}>active</option>
-                        <option th:selected="${status == 'inactive'}" th:text="inactive" th:value=@{/api/posts/status/inactive}>inactive</option>
+                        <option th:selected="${status == 'all'}" th:text="all" th:value=@{/api/posts?status=all}>all</option>
+                        <option th:selected="${status == 'active'}" th:text="active" th:value=@{/api/posts?status=active}>active</option>
+                        <option th:selected="${status == 'inactive'}" th:text="inactive" th:value=@{/api/posts?status=inactive}>inactive</option>
                     </select>
                 </th>
                 <th> Actions </th>

@@ -2,8 +2,8 @@ package mvc.spring.restmvc.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import mvc.spring.restmvc.forms.PostForm;
-import mvc.spring.restmvc.service.PostService;
 import mvc.spring.restmvc.model.Post;
+import mvc.spring.restmvc.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,7 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -36,21 +39,16 @@ public class PostController {
     }
 
     @RequestMapping(value = "/api/posts", method = RequestMethod.GET)
-    public String getPosts(Model model) {
-        List<Post> posts = postService.getTop15ByPublishedDesc();
-        model.addAttribute("status", "all");
-        if (posts.isEmpty()) {
-            return "posts/list";
+    public String getPostsByStatus(@RequestParam(value = "status", required = true) String status, Model model) {
+        List<Post> posts;
+        if (status.equals("all")) {
+            posts = postService.getTop15ByPublishedDesc();
+        } else {
+            posts = postService.getAllPostsByStatus(status);
+            posts.sort((p2, p1) -> p1.getPublished().compareTo(p2.getPublished()));
         }
-        model.addAttribute("posts", posts);
-        return "posts/list";
-    }
-
-    @RequestMapping(value = "/api/posts/status/{status}", method = RequestMethod.GET)
-    public String getPostsByStatus(@PathVariable("status") String status, Model model) {
-        List<Post> posts = postService.getAllPostsByStatus(status);
-        posts.sort((p2, p1) -> p1.getPublished().compareTo(p2.getPublished()));
         if (posts.isEmpty()) {
+            model.addAttribute("status", status);
             return "posts/list";
         }
         model.addAttribute("status", status);
@@ -78,6 +76,7 @@ public class PostController {
     @RequestMapping(value = "/api/posts/update/{postId}", method = RequestMethod.POST)
     public String updatePost(@PathVariable("postId") String postId, @Valid Post post, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            log.info(bindingResult.getAllErrors().toString());
             return "posts/edit_post";
         }
         post.setId(postId);

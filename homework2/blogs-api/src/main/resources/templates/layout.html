@@ -13,7 +13,7 @@
         <a href="index.html" th:href=@{/}>Home</a>
         <a href="users/login.html" th:href=@{/api/login}>Login</a>
         <a href="users/register.html" th:href=@{/api/register}>Register</a>
-        <a href="posts/list.html" th:href=@{/api/posts}>Posts</a>
+        <a href="posts/list.html" th:href=@{/api/posts?status=all}>Posts</a>
         <a href="posts/create_post.html" th:href=@{/api/posts/form}>Create Post</a>
         <a href="users/list_users.html" th:href=@{/api/users}>Users</a>
         <div sec:authorize="isAuthenticated()" id="logged-in-info"> Hello, <span sec:authentication="principal.username">User</span>

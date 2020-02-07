@@ -13,7 +13,7 @@
             <div th:if="${param.logout}">
                 <div class="alert alert-info">You have been logged out.</div>
             </div>
-            <h1>Login in the Blog</h1>
+            <h1>Log in</h1>
             <form method="post" th:object="${loginForm}" th:action="@{/api/login}">
                 <div><label for="email">Email:</label></div>
                 <input id="email" type="text" name="email" th:value="*{email}" required />

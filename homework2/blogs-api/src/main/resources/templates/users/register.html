@@ -14,9 +14,12 @@
         <h1 sec:authorize="isAuthenticated()">You are already logged in!</h1>
         <div sec:authorize="!isAuthenticated()">
             <h1>Register in the Blog</h1>
-            <form method="post" th:object="${registerForm}" th:action="@{/api/register}">
+            <form method="post" th:object="${registerForm}" th:action="@{/api/register}" enctype="multipart/form-data">
                 <div><label for="file">Image:</label></div>
-                <input type="file" name="imageUrl" th:value="*{imageUrl}" id="file">
+                <input type="hidden" th:value="*{imageUrl}" id="imageUrl" name="imageUrl" title="Article picture URL">
+                <div class="custom-file">
+                    <input type="file" id="file" name="file" class="custom-file-input" th:value="*{imageUrl}">
+                </div>
                 <div><label for="email">Email:</label></div>
                 <input id="email" type="text" name="email" th:value="*{email}" />
                 <span class="formError" th:if="${#fields.hasErrors('email')}"

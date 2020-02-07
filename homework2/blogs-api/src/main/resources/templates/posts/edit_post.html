@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
-      xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <head th:replace="layout :: site-head">
         <title>Edit User</title>
     </head>
@@ -30,6 +29,8 @@
             <textarea class="textarea" id="text" type="text" name="text" th:inline="text"> [[*{text}]] </textarea>
             <div><label for="tags" th:value="*{tags}">Tags:</label></div>
             <input id="tags" type="text" name="tags" th:value="*{#strings.listJoin(#messages.listMsg(tags), ',')}" />
+<!--            <div><label th:value="*{published}">Published:</label></div>-->
+<!--            <input type="date" name="published" th:value="*{published}" readonly/>-->
             <div><input class="button" type="submit" value="Update Post"></div>
         </form>
     </body>

@@ -1,6 +1,7 @@
 package mvc.spring.restmvc.model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -16,8 +17,6 @@ import java.util.List;
 @Document(collection = "users")
 @Data
 @NoArgsConstructor
-@JsonIgnoreProperties(value = {"authorities", "name",
-        "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"})
 public class User {
 
     private static final String DEFAULT_IMAGE = "https://cdn3.iconfinder.com/data/icons/vector-icons-6/96/256-512.png";

@@ -1,13 +1,11 @@
 package mvc.spring.restmvc.init;
 
-import mvc.spring.restmvc.exception.UserAlreadyExistsException;
+import mvc.spring.restmvc.model.Permission;
+import mvc.spring.restmvc.model.Role;
 import mvc.spring.restmvc.service.PermissionService;
 import mvc.spring.restmvc.service.PostService;
 import mvc.spring.restmvc.service.RoleService;
 import mvc.spring.restmvc.service.UserService;
-import mvc.spring.restmvc.model.Permission;
-import mvc.spring.restmvc.model.Role;
-import mvc.spring.restmvc.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -16,8 +14,8 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 
 import static mvc.spring.restmvc.model.Permission.*;
-import static mvc.spring.restmvc.model.Role.ROLE_USER;
 import static mvc.spring.restmvc.model.Role.ROLE_ADMIN;
+import static mvc.spring.restmvc.model.Role.ROLE_USER;
 
 @Component
 public class DataInitializer implements ApplicationRunner {
