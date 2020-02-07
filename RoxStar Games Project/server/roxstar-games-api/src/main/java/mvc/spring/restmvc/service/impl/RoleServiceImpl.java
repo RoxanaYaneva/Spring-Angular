@@ -1,9 +1,10 @@
-package mvc.spring.restmvc.service;
+package mvc.spring.restmvc.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import mvc.spring.restmvc.dao.RoleRepository;
 import mvc.spring.restmvc.exception.EntityNotFoundException;
 import mvc.spring.restmvc.model.Role;
+import mvc.spring.restmvc.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role createRole(Role role) {
-        Role probe = new Role(role.getName(), null);
+        Role probe = new Role(role.getUserProfile(), null); // TODO:  check what happens here !!!!!!
         Optional<Role> result = repo.findOne(Example.of(probe));
         if (result.isPresent()) {
             return result.get();

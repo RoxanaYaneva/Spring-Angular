@@ -1,8 +1,9 @@
-package mvc.spring.restmvc.service;
+package mvc.spring.restmvc.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import mvc.spring.restmvc.dao.PermissionRepository;
 import mvc.spring.restmvc.model.Permission;
+import mvc.spring.restmvc.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;

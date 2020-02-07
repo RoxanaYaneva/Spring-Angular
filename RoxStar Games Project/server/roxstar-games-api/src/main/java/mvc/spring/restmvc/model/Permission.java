@@ -1,6 +1,9 @@
 package mvc.spring.restmvc.model;
 
 import lombok.*;
+import mvc.spring.restmvc.model.enums.Asset;
+import mvc.spring.restmvc.model.enums.Operation;
+import mvc.spring.restmvc.model.enums.Owner;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,30 +15,24 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Permission {
-    public static final String OWN = "OWN";
-    public static final String ALL = "ALL";
-    public static final String READ = "READ";
-    public static final String CREATE = "CREATE";
-    public static final String UPDATE = "UPDATE";
-    public static final String DELETE = "DELETE";
 
     @Id
     private String id;
 
     @NonNull
     @NotNull
-    private String owner;
+    private Owner owner;
 
     @NonNull
     @NotNull
-    private String asset;
+    private Asset asset;
 
     @NonNull
     @NotNull
-    private String operation;
+    private Operation operation;
 
     @Override
     public String toString() {
-        return this.getOwner() + "_" + this.getAsset() + "_" + this.getOperation();
+        return this.getOwner().getDescription() + "_" + this.getAsset().getDescription() + "_" + this.getOperation().getDescription();
     }
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import lombok.NonNull;
-import org.hibernate.validator.constraints.Length;
+import mvc.spring.restmvc.model.enums.UserProfile;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,24 +17,21 @@ import java.util.Collection;
 @JsonPropertyOrder({"id", "name", "permissions"})
 @Data
 public class Role {
-    public static String ROLE_USER = "ROLE_USER";
-    public static String ROLE_ADMIN = "ROLE_ADMIN";
 
     @Id
     private String id;
 
     @NotNull
     @NonNull
-    @Length(min = 2, max = 30)
-    private String name;
+    private UserProfile userProfile;
 
     @JsonManagedReference
     private Collection<Permission> permissions = new ArrayList<>();
 
     @JsonCreator
     @java.beans.ConstructorProperties({"name", "permissions"})
-    public Role(@NotNull @Length(min = 2, max = 30) String name, Collection<Permission> permissions) {
-        this.name = name;
+    public Role(@NotNull UserProfile userProfile, Collection<Permission> permissions) {
+        this.userProfile = userProfile;
         this.permissions = permissions;
     }
 }

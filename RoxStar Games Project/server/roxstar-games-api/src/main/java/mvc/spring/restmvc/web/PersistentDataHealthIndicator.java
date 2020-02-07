@@ -1,6 +1,6 @@
 package mvc.spring.restmvc.web;
 
-import mvc.spring.restmvc.dao.GameRepository;
+import mvc.spring.restmvc.dao.ProductRepository;
 import mvc.spring.restmvc.dao.OrderRepository;
 import mvc.spring.restmvc.dao.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class PersistentDataHealthIndicator implements HealthIndicator {
     private UserRepository userRepository;
 
     @Autowired
-    private GameRepository gameRepository;
+    private ProductRepository gameRepository;
 
     @Autowired
     private OrderRepository orderRepository;

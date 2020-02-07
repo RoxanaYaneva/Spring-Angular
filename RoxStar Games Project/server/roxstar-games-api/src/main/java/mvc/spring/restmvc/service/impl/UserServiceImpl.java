@@ -1,10 +1,13 @@
-package mvc.spring.restmvc.service;
+package mvc.spring.restmvc.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import mvc.spring.restmvc.dao.UserRepository;
 import mvc.spring.restmvc.exception.EntityNotFoundException;
 import mvc.spring.restmvc.model.Role;
 import mvc.spring.restmvc.model.User;
+import mvc.spring.restmvc.model.enums.UserProfile;
+import mvc.spring.restmvc.service.RoleService;
+import mvc.spring.restmvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -14,8 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static mvc.spring.restmvc.model.Role.ROLE_USER;
 
 @Service
 @Slf4j
@@ -50,10 +51,10 @@ public class UserServiceImpl implements UserService {
             user.setRegistered(LocalDateTime.now());
             user.setUpdated((LocalDateTime.now()));
             if (user.getRoles() == null || user.getRoles().isEmpty()) {
-                user.setRoles(Arrays.asList(roleService.getRoleByName(ROLE_USER).get()));
+                user.setRoles(Arrays.asList(roleService.getRoleByName(UserProfile.CUSTOMER.getDescription()).get()));
             } else {
                 List<Role> expandedRoles = user.getRoles().stream()
-                        .map(role -> roleService.getRoleByName(role.getName()))
+                        .map(role -> roleService.getRoleByName(role.getUserProfile().getDescription()))
                         .filter(roleOpt -> roleOpt.isPresent())
                         .map(roleOpt -> roleOpt.get())
                         .collect(Collectors.toList());

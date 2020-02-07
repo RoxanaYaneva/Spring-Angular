@@ -31,8 +31,8 @@ public class OrderController {
         return service.getOrderById(id);
     }
 
-    @GetMapping({"/status/{status}"})
-    public List<Order> getOrdersWithStatus(@PathVariable("status") String status) {
+    @GetMapping
+    public List<Order> getOrdersWithStatus(@RequestParam(value = "status", required = true) String status) {
         return service.getOrdersByStatus(status);
     }
 

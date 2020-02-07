@@ -1,9 +1,10 @@
-package mvc.spring.restmvc.service;
+package mvc.spring.restmvc.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import mvc.spring.restmvc.dao.CommentRepository;
 import mvc.spring.restmvc.exception.EntityNotFoundException;
 import mvc.spring.restmvc.model.Comment;
+import mvc.spring.restmvc.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

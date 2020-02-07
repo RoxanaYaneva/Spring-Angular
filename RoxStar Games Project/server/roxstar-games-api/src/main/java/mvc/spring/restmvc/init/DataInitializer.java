@@ -4,7 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import mvc.spring.restmvc.model.Permission;
 import mvc.spring.restmvc.model.Role;
 import mvc.spring.restmvc.model.User;
-import mvc.spring.restmvc.service.GameService;
+import mvc.spring.restmvc.model.enums.Asset;
+import mvc.spring.restmvc.model.enums.Operation;
+import mvc.spring.restmvc.model.enums.Owner;
+import mvc.spring.restmvc.model.enums.UserProfile;
+import mvc.spring.restmvc.service.ProductService;
 import mvc.spring.restmvc.service.PermissionService;
 import mvc.spring.restmvc.service.RoleService;
 import mvc.spring.restmvc.service.UserService;
@@ -14,15 +18,13 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-import static mvc.spring.restmvc.model.Permission.*;
-import static mvc.spring.restmvc.model.Role.*;
 
 @Component
 @Slf4j
 public class DataInitializer implements ApplicationRunner {
 
     @Autowired
-    private GameService gameService;
+    private ProductService gameService;
 
     @Autowired
     private UserService userService;
@@ -36,19 +38,19 @@ public class DataInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("Starting data initialization  ...");
-        Permission gameCreate = permService.createPermission(new Permission(ALL, "GAME", CREATE));
-        Permission gameRead = permService.createPermission(new Permission(ALL, "GAME", READ));
-        Permission gameUpdate = permService.createPermission(new Permission(ALL, "GAME", UPDATE));
-        Permission gameDelete = permService.createPermission(new Permission(ALL, "GAME", DELETE));
-        Permission ownUserRead = permService.createPermission(new Permission(OWN, "USER", READ));
-        Permission ownUserUpdate = permService.createPermission(new Permission(OWN, "USER", UPDATE));
-        Permission usersRead = permService.createPermission(new Permission(ALL, "USER", READ));
-        Permission usersCreate = permService.createPermission(new Permission(ALL, "USER", CREATE));
-        Permission usersUpdate = permService.createPermission(new Permission(ALL, "USER", UPDATE));
-        Permission usersDelete = permService.createPermission(new Permission(ALL, "USER", DELETE));
-        Role roleUser = roleService.createRole(new Role(ROLE_USER, Arrays.asList(gameRead, ownUserRead, ownUserUpdate)));
-        Role roleAdmin = roleService.createRole(new Role(ROLE_ADMIN, Arrays.asList(gameRead, gameUpdate, gameCreate, gameDelete,
-                ownUserRead, ownUserUpdate,
+        Permission gameCreate = permService.createPermission(new Permission(Owner.OWN, Asset.GAME, Operation.WRITE));
+        Permission gameRead = permService.createPermission(new Permission(Owner.ALL, Asset.GAME, Operation.READ));
+        Permission gameUpdate = permService.createPermission(new Permission(Owner.ALL, Asset.GAME, Operation.UPDATE));
+        Permission gameDelete = permService.createPermission(new Permission(Owner.ALL, Asset.GAME, Operation.DELETE));
+        Permission ownUserRead = permService.createPermission(new Permission(Owner.OWN, Asset.USER, Operation.READ));
+        Permission ownUserUpdate = permService.createPermission(new Permission(Owner.OWN, Asset.USER, Operation.UPDATE));
+        Permission usersRead = permService.createPermission(new Permission(Owner.ALL, Asset.USER, Operation.READ));
+        Permission usersCreate = permService.createPermission(new Permission(Owner.ALL, Asset.USER, Operation.WRITE));
+        Permission usersUpdate = permService.createPermission(new Permission(Owner.ALL, Asset.USER, Operation.UPDATE));
+        Permission usersDelete = permService.createPermission(new Permission(Owner.ALL, Asset.USER, Operation.DELETE));
+        Role roleCustomer = roleService.createRole(new Role(UserProfile.CUSTOMER, Arrays.asList(gameRead, ownUserRead, ownUserUpdate)));
+        Role roleProdSupplier = roleService.createRole(new Role(UserProfile.PROD_SUPPLIER, Arrays.asList(gameRead, gameCreate, gameUpdate, gameDelete, ownUserRead, ownUserUpdate)));
+        Role roleAdmin = roleService.createRole(new Role(UserProfile.ADMIN, Arrays.asList(gameRead, ownUserRead, ownUserUpdate,
                 usersRead, usersCreate, usersUpdate, usersDelete)));
 
         userService.createUser(new User("admin@gmail.com", "admin123", "DEFAULT", "ADMIN",

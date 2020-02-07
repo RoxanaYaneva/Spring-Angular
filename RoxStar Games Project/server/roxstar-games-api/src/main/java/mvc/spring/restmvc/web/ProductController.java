@@ -3,9 +3,9 @@ package mvc.spring.restmvc.web;
 import lombok.extern.slf4j.Slf4j;
 import mvc.spring.restmvc.exception.InvalidEntityIdException;
 import mvc.spring.restmvc.model.Comment;
-import mvc.spring.restmvc.model.Game;
+import mvc.spring.restmvc.model.Product;
 import mvc.spring.restmvc.service.CommentService;
-import mvc.spring.restmvc.service.GameService;
+import mvc.spring.restmvc.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,56 +17,56 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/games")
+@RequestMapping("/api/products")
 @Slf4j
-public class GameController {
+public class ProductController {
 
     @Autowired
-    private GameService gameService;
+    private ProductService productService;
 
     @Autowired
     private CommentService commentService;
 
     @GetMapping(value = {"", "/"})
-    public List<Game> getGames() {
-        return gameService.getAllGames();
+    public List<Product> getGames() {
+        return productService.getAllGames();
     }
 
     @GetMapping("{id}")
-    public Game getGame(@PathVariable("id") String id) {
-        return gameService.getGameById(id);
+    public Product getGame(@PathVariable("id") String id) {
+        return productService.getGameById(id);
     }
 
-    @GetMapping("/title/{title}")
-    public List<Game> getGamesByTitle(@PathVariable("title") String title) {
-        return gameService.getGamesByTitle(title);
+    @GetMapping
+    public List<Product> getGamesByTitle(@RequestParam(value = "title", required = true) String title) {
+        return productService.getGamesByTitle(title);
     }
 
-    @GetMapping("/studio/{studio}")
-    public List<Game> getGamesByStudio(@PathVariable("studio") String studio) {
-        return gameService.getGamesByStudio(studio);
+    @GetMapping
+    public List<Product> getGamesByStudio(@RequestParam(value = "studio", required = true) String studio) {
+        return productService.getGamesByStudio(studio);
     }
 
-    @GetMapping("/platform/{platform}")
-    public List<Game> getGamesByPlatform(@PathVariable("platform") String platform) {
-        return gameService.getGamesByPlatform(platform);
+    @GetMapping
+    public List<Product> getGamesByPlatform(@RequestParam(value = "platform", required = true) String platform) {
+        return productService.getGamesByPlatform(platform);
     }
 
-    @GetMapping("/genre/{genre}")
-    public List<Game> getGamesByGenre(@PathVariable("genre") String genre) {
-        return gameService.getGamesByGenre(genre);
+    @GetMapping
+    public List<Product> getGamesByGenre(@RequestParam(value = "genre", required = true) String genre) {
+        return productService.getGamesByGenre(genre);
     }
 
-    @GetMapping("/type/{type}")
-    public List<Game> getGamesByType(@PathVariable("type") String type) {
-        return gameService.getGamesByType(type);
+    @GetMapping
+    public List<Product> getGamesByType(@RequestParam(value = "type", required = true) String type) {
+        return productService.getGamesByType(type);
     }
 
     @PostMapping
-    public ResponseEntity<Game> addGame(@Valid @RequestBody Game game) {
-        Game created = gameService.createGame(game);
+    public ResponseEntity<Product> addGame(@Valid @RequestBody Product game) {
+        Product created = productService.createGame(game);
         URI location = MvcUriComponentsBuilder
-                .fromMethodName(GameController.class, "addGame", Game.class)
+                .fromMethodName(ProductController.class, "addGame", Product.class)
                 .pathSegment("{id}")
                 .buildAndExpand(created.getId())
                 .toUri();
@@ -75,17 +75,17 @@ public class GameController {
     }
 
     @PutMapping("{id}")
-    public Game update(@PathVariable("id") String id, @Valid @RequestBody Game game) {
+    public Product update(@PathVariable("id") String id, @Valid @RequestBody Product game) {
         if (!id.equals(game.getId())) {
             throw new InvalidEntityIdException(String.format("Entity ID='%s' is different from URL resource ID='%s'", game.getId(), id));
         } else {
-            return gameService.updateGame(game);
+            return productService.updateGame(game);
         }
     }
 
     @DeleteMapping("{id}")
-    public Game remove(@PathVariable("id") String id) {
-        return gameService.deleteGame(id);
+    public Product remove(@PathVariable("id") String id) {
+        return productService.deleteGame(id);
     }
 
     @GetMapping("/{id}/comments")
@@ -106,7 +106,7 @@ public class GameController {
     public ResponseEntity<Comment> addComment(@Valid @RequestBody Comment comment) {
         Comment created = commentService.createComment(comment);
         URI location = MvcUriComponentsBuilder
-                .fromMethodName(GameController.class, "addComment", Comment.class)
+                .fromMethodName(ProductController.class, "addComment", Comment.class)
                 .pathSegment("{commentId}")
                 .buildAndExpand(comment.getGameId(), created.getId())
                 .toUri();

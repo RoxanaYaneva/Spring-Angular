@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 @Document(collection = "users")
 @Data
 @NoArgsConstructor
-@JsonIgnoreProperties(value = {"authorities", "name",
+@JsonIgnoreProperties(value = {"authorities", "name", "password",
         "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"})
 public class User {
 
@@ -40,7 +40,7 @@ public class User {
 
     @NotNull
     @NonNull
-    @Length(min = 8, max = 30)
+    @Length(min = 8, max = 100)
     private String password;
 
     @NotNull

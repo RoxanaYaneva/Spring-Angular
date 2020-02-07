@@ -1,8 +1,9 @@
-package mvc.spring.restmvc.service;
+package mvc.spring.restmvc.service.impl;
 
 import mvc.spring.restmvc.dao.OrderRepository;
 import mvc.spring.restmvc.exception.EntityNotFoundException;
 import mvc.spring.restmvc.model.Order;
+import mvc.spring.restmvc.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

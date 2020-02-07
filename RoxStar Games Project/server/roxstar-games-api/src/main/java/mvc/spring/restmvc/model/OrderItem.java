@@ -6,9 +6,9 @@ import javax.validation.constraints.PositiveOrZero;
 import java.beans.Transient;
 
 @Data
-public class OrderProduct {
+public class OrderItem {
 
-    private Game game;
+    private Product game;
 
     @PositiveOrZero
     private Integer quantity;

@@ -1,10 +1,11 @@
-package mvc.spring.restmvc.service;
+package mvc.spring.restmvc.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import mvc.spring.restmvc.dao.GameRepository;
+import mvc.spring.restmvc.dao.ProductRepository;
 import mvc.spring.restmvc.exception.EntityAlreadyExistsException;
 import mvc.spring.restmvc.exception.EntityNotFoundException;
-import mvc.spring.restmvc.model.Game;
+import mvc.spring.restmvc.model.Product;
+import mvc.spring.restmvc.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,26 +13,26 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class GameServiceImpl implements GameService {
+public class ProductServiceImpl implements ProductService {
 
     @Autowired
-    private GameRepository repo;
+    private ProductRepository repo;
 
     @Override
-    public List<Game> getAllGames() {
+    public List<Product> getAllGames() {
         return repo.findAll();
     }
 
     @Override
-    public Game getGameById(String id) {
+    public Product getGameById(String id) {
         if (id == null) return null;
         return repo.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Game with ID=%s does not exist.", id)));
     }
 
     @Override
-    public Game createGame(Game game) {
-        List<Game> result = repo.findByTitle(game.getTitle());
+    public Product createGame(Product game) {
+        List<Product> result = repo.findByTitle(game.getTitle());
         if (!result.isEmpty()) {
             throw new EntityAlreadyExistsException(String.format("Entity already exists.", game));
         } else {
@@ -41,39 +42,39 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Game updateGame(Game game) {
+    public Product updateGame(Product game) {
         return repo.save(game);
     }
 
     @Override
-    public Game deleteGame(String id) {
-        Game old = getGameById(id);
+    public Product deleteGame(String id) {
+        Product old = getGameById(id);
         repo.deleteById(id);
         return old;
     }
 
     @Override
-    public List<Game> getGamesByTitle(String title) {
+    public List<Product> getGamesByTitle(String title) {
         return repo.findByTitle(title);
     }
 
     @Override
-    public List<Game> getGamesByGenre(String genre) {
+    public List<Product> getGamesByGenre(String genre) {
         return repo.findByGenre(genre);
     }
 
     @Override
-    public List<Game> getGamesByStudio(String studio) {
+    public List<Product> getGamesByStudio(String studio) {
         return repo.findByStudio(studio);
     }
 
     @Override
-    public List<Game> getGamesByPlatform(String platform) {
+    public List<Product> getGamesByPlatform(String platform) {
         return repo.findByPlatform(platform);
     }
 
     @Override
-    public List<Game> getGamesByType(String type) {
+    public List<Product> getGamesByType(String type) {
         return repo.findByType(type);
     }
 }

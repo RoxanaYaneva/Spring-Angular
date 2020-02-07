@@ -7,13 +7,12 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Document(collection = "games")
+@Document(collection = "products")
 @Data
 @AllArgsConstructor
-public class Game {
+public class Product {
 
     @Id
     private String id;
@@ -44,6 +43,6 @@ public class Game {
 
     private double price;
 
-    private List<String> imageUrls = new ArrayList<>();
+    private List<String> imageUrls;
 
 }

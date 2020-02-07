@@ -32,7 +32,7 @@ public class Order {
 
     @NonNull
     @JsonManagedReference
-    private List<OrderProduct> products = new ArrayList<>();
+    private List<OrderItem> products = new ArrayList<>();
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created = LocalDateTime.now();
