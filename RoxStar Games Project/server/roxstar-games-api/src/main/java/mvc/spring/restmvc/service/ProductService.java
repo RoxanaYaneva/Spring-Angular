@@ -3,16 +3,19 @@ package mvc.spring.restmvc.service;
 import mvc.spring.restmvc.model.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductService {
     List<Product> getAllGames();
-    Product getGameById(String id);
+    Product getGameById(Long id);
     Product createGame(Product game);
     Product updateGame(Product game);
-    Product deleteGame(String id);
-    List<Product> getGamesByTitle(String title);
+    Product deleteGame(Long id);
+    Product getGamesByTitle(String title);
     List<Product> getGamesByGenre(String genre);
     List<Product> getGamesByStudio(String studio);
     List<Product> getGamesByPlatform(String platform);
     List<Product> getGamesByType(String type);
+    List<Product> getGamesByOnSale(boolean onSale);
+    List<Product> getNewGames();
 }

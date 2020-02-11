@@ -4,32 +4,36 @@ import lombok.*;
 import mvc.spring.restmvc.model.enums.Asset;
 import mvc.spring.restmvc.model.enums.Operation;
 import mvc.spring.restmvc.model.enums.Owner;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotNull;
+import javax.persistence.*;
+import java.util.Collection;
 
-@Document(collection = "permissions")
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
+@Entity
+@Table(name = "permissions")
 public class Permission {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @NonNull
-    @NotNull
     private Owner owner;
 
-    @NonNull
-    @NotNull
     private Asset asset;
 
-    @NonNull
-    @NotNull
     private Operation operation;
+
+    @ManyToMany(mappedBy = "permissions")
+    @ToString.Exclude
+    private Collection<Role> roles;
+
+    public Permission(Owner owner, Asset asset, Operation operation) {
+        this.owner = owner;
+        this.asset = asset;
+        this.operation = operation;
+    }
 
     @Override
     public String toString() {

@@ -5,19 +5,27 @@ import mvc.spring.restmvc.exception.InvalidEntityIdException;
 import mvc.spring.restmvc.model.User;
 import mvc.spring.restmvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/users")
 @Slf4j
 public class UserController {
 
+    private static final String UPLOADS_DIR = "tmp";
     @Autowired
     private UserService service;
 
@@ -27,11 +35,12 @@ public class UserController {
     }
 
     @GetMapping("{id}")
-    public User getUser(@PathVariable("id") String id) {
+    public User getUser(@PathVariable("id") Long id) {
         return service.getUserById(id);
     }
 
     @PostMapping
+    @CrossOrigin
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
         User created = service.createUser(user);
         URI location = MvcUriComponentsBuilder
@@ -44,10 +53,18 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<User> update(@PathVariable("id") String id, @Valid @RequestBody User user) {
+    public ResponseEntity<User> update(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file, @Valid @RequestBody User user) {
         if (!id.equals(user.getId())) {
             throw new InvalidEntityIdException(String.format("Entity ID='%s' is different from URL resource ID='%s'", user.getId(), id));
         } else {
+            if (!file.isEmpty() && file.getOriginalFilename().length() > 0) {
+                if (Pattern.matches("\\w+\\.(jpg|png)", file.getOriginalFilename())) {
+                    handleMultipartFile(file);
+                    user.setImageUrl(file.getOriginalFilename());
+                } else {
+                    user.setImageUrl(null);
+                }
+            }
             User updated = service.updateUser(user);
             log.info("User updated: {}", updated);
             return ResponseEntity.ok(updated);
@@ -55,7 +72,27 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    public User remove(@PathVariable("id") String id) {
+    public User remove(@PathVariable("id") Long id) {
         return service.deleteUser(id);
     }
+
+    private void handleMultipartFile(MultipartFile file) {
+        String name = file.getOriginalFilename();
+        long size = file.getSize();
+        log.info("File: " + name + ", Size: " + size);
+        try {
+            File currentDir = new File(UPLOADS_DIR);
+            if(!currentDir.exists()) {
+                currentDir.mkdirs();
+            }
+            String path = currentDir.getAbsolutePath() + "/" + file.getOriginalFilename();
+            path = new File(path).getAbsolutePath();
+            log.info(path);
+            File f = new File(path);
+            FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(f));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }

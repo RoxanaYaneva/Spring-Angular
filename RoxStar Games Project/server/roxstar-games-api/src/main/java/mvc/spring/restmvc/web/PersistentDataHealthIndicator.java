@@ -17,7 +17,7 @@ public class PersistentDataHealthIndicator implements HealthIndicator {
     private UserRepository userRepository;
 
     @Autowired
-    private ProductRepository gameRepository;
+    private ProductRepository productRepository;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -26,7 +26,7 @@ public class PersistentDataHealthIndicator implements HealthIndicator {
     public Health health() {
         return Health
                 .up()
-                .withDetail("games.count", gameRepository.count())
+                .withDetail("products.count", productRepository.count())
                 .withDetail("users.count", userRepository.count())
                 .withDetail("orders.count", orderRepository.count())
                 .build();

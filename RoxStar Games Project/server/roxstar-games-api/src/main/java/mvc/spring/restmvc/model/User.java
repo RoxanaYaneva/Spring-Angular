@@ -1,73 +1,78 @@
 package mvc.spring.restmvc.model;
 
 import com.fasterxml.jackson.annotation.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.authority.SimpleGrantedAuthority;
-//import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-@Document(collection = "users")
 @Data
-@NoArgsConstructor
 @JsonIgnoreProperties(value = {"authorities", "name", "password",
         "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"})
+@JsonPropertyOrder({"id"})
+@NoArgsConstructor
+@Entity
+@Table(name = "users")
 public class User {
 
     private static final String DEFAULT_IMAGE = "https://cdn3.iconfinder.com/data/icons/vector-icons-6/96/256-512.png";
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @NotNull
-    @NonNull
-    @Length(min = 6, max = 40)
     @Email
+    @Column(unique=true)
     private String email;
 
-    @NotNull
-    @NonNull
     @Length(min = 8, max = 100)
+    @JsonIgnore
     private String password;
 
-    @NotNull
-    @NonNull
     @Length(min = 2, max = 30)
     private String firstName;
 
-    @NotNull
-    @NonNull
     @Length(min = 2, max = 30)
     private String lastName;
 
     private String imageUrl = DEFAULT_IMAGE;
 
-    @NonNull
+    @ManyToMany(fetch = FetchType.EAGER)
+//    @Builder.Default
+    @JoinTable(name = "rolesByUser",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     @JsonManagedReference
-    private List<Role> roles = new ArrayList<>();
+    private List<Role> roles;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @JsonManagedReference(value = "comment_user")
+//    @JsonManagedReference(value = "user_comment")
+    @ToString.Exclude
+    private List<Comment> comments;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @JsonManagedReference(value = "user_order")
+    @JsonIgnore
+    @ToString.Exclude
+    private List<Order> orders;
 
     private boolean active = true;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm::ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime registered = LocalDateTime.now();
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm::ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private  LocalDateTime updated = LocalDateTime.now();
 
-    public User(String id,
+    public User(Long id,
                 @NotNull @Length(min = 6, max = 40) String email,
                 @NotNull @Length(min = 8, max = 30) String password,
                 @NotNull @Length(min = 2, max = 30) String fname,

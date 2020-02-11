@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +32,14 @@ public class PermissionServiceImpl implements PermissionService {
             return result.get();
         } else {
             log.info(String.format("Inserting new permission: {}", permission));
-            return repo.insert(permission);
+            return insert(permission);
         }
+    }
+
+    @Transactional
+    public Permission insert(Permission perm) {
+        perm.setId(null);
+        return repo.save(perm);
     }
 
     @Override

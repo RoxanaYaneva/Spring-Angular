@@ -1,36 +1,46 @@
 package mvc.spring.restmvc.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import mvc.spring.restmvc.model.enums.UserProfile;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
+import javax.persistence.*;
 import java.util.Collection;
 
-@Document(collection = "roles")
 @JsonPropertyOrder({"id", "name", "permissions"})
 @Data
+@NoArgsConstructor
+@Entity
+@Table(name = "roles")
 public class Role {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @NotNull
-    @NonNull
     private UserProfile userProfile;
 
-    @JsonManagedReference
-    private Collection<Permission> permissions = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "permByRole",
+               joinColumns = @JoinColumn(name = "role_id"),
+               inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    @JsonIgnore
+    @ToString.Exclude
+    private Collection<Permission> permissions;
+
+    @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
+    @ToString.Exclude
+    private Collection<User> users;
 
     @JsonCreator
     @java.beans.ConstructorProperties({"name", "permissions"})
-    public Role(@NotNull UserProfile userProfile, Collection<Permission> permissions) {
+    public Role(UserProfile userProfile, Collection<Permission> permissions) {
         this.userProfile = userProfile;
         this.permissions = permissions;
     }

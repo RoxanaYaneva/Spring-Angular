@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(String id) {
+    public User getUserById(Long id) {
         if (id == null) return null;
         return repo.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(String.format("User with id=%s does not exist", id)));
@@ -51,10 +52,10 @@ public class UserServiceImpl implements UserService {
             user.setRegistered(LocalDateTime.now());
             user.setUpdated((LocalDateTime.now()));
             if (user.getRoles() == null || user.getRoles().isEmpty()) {
-                user.setRoles(Arrays.asList(roleService.getRoleByName(UserProfile.CUSTOMER.getDescription()).get()));
+                user.setRoles(Arrays.asList(roleService.getRoleByUserProfile(UserProfile.CUSTOMER).get()));
             } else {
                 List<Role> expandedRoles = user.getRoles().stream()
-                        .map(role -> roleService.getRoleByName(role.getUserProfile().getDescription()))
+                        .map(role -> roleService.getRoleByUserProfile(role.getUserProfile()))
                         .filter(roleOpt -> roleOpt.isPresent())
                         .map(roleOpt -> roleOpt.get())
                         .collect(Collectors.toList());
@@ -63,8 +64,15 @@ public class UserServiceImpl implements UserService {
             }
             user.setActive(true);
             log.info("Creating default user: {}", user);
-            return repo.insert(user);
+            return insert(user);
         }
+    }
+
+    @Transactional
+    public User insert(User user) {
+        //Forcing to insert a new user instead of updating
+        user.setId(null);
+        return repo.save(user);
     }
 
     @Override
@@ -74,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User deleteUser(String id) {
+    public User deleteUser(Long id) {
         User old = getUserById(id);
         repo.deleteById(id);
         return old;

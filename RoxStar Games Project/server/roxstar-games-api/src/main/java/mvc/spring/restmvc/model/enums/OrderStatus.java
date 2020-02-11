@@ -6,12 +6,13 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access= AccessLevel.PRIVATE)
-public enum Operation {
 
-    READ(1,"READ"),
-    CREATE(2,"CREATE"),
-    UPDATE(3,"UPDATE"),
-    DELETE(4, "DELETE");
+public enum OrderStatus {
+
+    PENDING(1,"Pending"),
+    CLEARED(2,"Cleared"),
+    CANCELED(3,"Canceled"),
+    SHIPPED(4, "Shipped");
 
     private Integer id;
     private String description;

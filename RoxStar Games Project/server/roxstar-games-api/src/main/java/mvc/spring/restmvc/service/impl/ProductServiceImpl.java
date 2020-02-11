@@ -9,7 +9,8 @@ import mvc.spring.restmvc.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -24,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getGameById(String id) {
+    public Product getGameById(Long id) {
         if (id == null) return null;
         return repo.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Game with ID=%s does not exist.", id)));
@@ -32,13 +33,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createGame(Product game) {
-        List<Product> result = repo.findByTitle(game.getTitle());
-        if (!result.isEmpty()) {
-            throw new EntityAlreadyExistsException(String.format("Entity already exists.", game));
+        Product result = repo.findByTitle(game.getTitle());
+        if (result != null) {
+            throw new EntityAlreadyExistsException(String.format("Game with that title exists.", game));
         } else {
-            log.info("Creating default user: {}", game);
-            return repo.insert(game);
+            log.info("Creating default game: {}", game);
+            return insert(game);
         }
+    }
+
+    @Transactional
+    public Product insert(Product game) {
+        game.setId(null);
+        return repo.save(game);
     }
 
     @Override
@@ -47,14 +54,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product deleteGame(String id) {
+    public Product deleteGame(Long id) {
         Product old = getGameById(id);
         repo.deleteById(id);
         return old;
     }
 
     @Override
-    public List<Product> getGamesByTitle(String title) {
+    public Product getGamesByTitle(String title) {
         return repo.findByTitle(title);
     }
 
@@ -76,5 +83,18 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getGamesByType(String type) {
         return repo.findByType(type);
+    }
+
+    @Override
+    public List<Product> getGamesByOnSale(boolean onSale) {
+        return repo.findByOnSale(onSale);
+    }
+
+    @Override
+    public List<Product> getNewGames() {
+        List<Product> products = repo.findAll();
+        products.sort((p2, p1) -> p1.getReleased().compareTo(p2.getReleased()));
+        return products;
+
     }
 }

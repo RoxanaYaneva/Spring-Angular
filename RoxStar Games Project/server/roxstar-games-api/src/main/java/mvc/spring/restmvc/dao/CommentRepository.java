@@ -1,12 +1,15 @@
 package mvc.spring.restmvc.dao;
 
 import mvc.spring.restmvc.model.Comment;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import mvc.spring.restmvc.model.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
-public interface CommentRepository extends MongoRepository<Comment, String> {
-    List<Comment> findByGameId(String gameId);
+public interface CommentRepository extends JpaRepository<Comment, Long> {
+    @Transactional(readOnly=true)
+    List<Comment> findByProduct(Product game);
 }

@@ -27,11 +27,11 @@ public class OrderController {
     }
 
     @GetMapping("{id}")
-    public Order getOrder(@PathVariable("id") String id) {
+    public Order getOrder(@PathVariable("id") Long id) {
         return service.getOrderById(id);
     }
 
-    @GetMapping
+    @GetMapping(params = "status")
     public List<Order> getOrdersWithStatus(@RequestParam(value = "status", required = true) String status) {
         return service.getOrdersByStatus(status);
     }
@@ -60,7 +60,7 @@ public class OrderController {
     }
 
     @DeleteMapping("{id}")
-    public Order remove(@PathVariable("id") String id) {
+    public Order remove(@PathVariable("id") Long id) {
         return service.deleteOrder(id);
     }
 }

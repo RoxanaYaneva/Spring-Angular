@@ -8,12 +8,18 @@ import mvc.spring.restmvc.service.CommentService;
 import mvc.spring.restmvc.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @RestController
@@ -21,49 +27,74 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ProductController {
 
+    private static final String UPLOADS_DIR = "tmp";
     @Autowired
     private ProductService productService;
 
     @Autowired
     private CommentService commentService;
 
+    @CrossOrigin
     @GetMapping(value = {"", "/"})
     public List<Product> getGames() {
         return productService.getAllGames();
     }
 
+    @CrossOrigin
     @GetMapping("{id}")
-    public Product getGame(@PathVariable("id") String id) {
+    public Product getGame(@PathVariable("id") Long id) {
         return productService.getGameById(id);
     }
 
-    @GetMapping
-    public List<Product> getGamesByTitle(@RequestParam(value = "title", required = true) String title) {
+    @CrossOrigin
+    @GetMapping(params = "title")
+    public Product getGamesByTitle(@RequestParam(value = "title", required = true) String title) {
         return productService.getGamesByTitle(title);
     }
 
-    @GetMapping
+    @GetMapping(params = "studio")
     public List<Product> getGamesByStudio(@RequestParam(value = "studio", required = true) String studio) {
         return productService.getGamesByStudio(studio);
     }
 
-    @GetMapping
+    @CrossOrigin
+    @GetMapping(params = "platform")
     public List<Product> getGamesByPlatform(@RequestParam(value = "platform", required = true) String platform) {
         return productService.getGamesByPlatform(platform);
     }
 
-    @GetMapping
+    @GetMapping(params = "genre")
     public List<Product> getGamesByGenre(@RequestParam(value = "genre", required = true) String genre) {
         return productService.getGamesByGenre(genre);
     }
 
-    @GetMapping
+    @GetMapping(params = "type")
     public List<Product> getGamesByType(@RequestParam(value = "type", required = true) String type) {
         return productService.getGamesByType(type);
     }
 
+    @CrossOrigin
+    @GetMapping(value = "onSale")
+    public List<Product> getGamesByOnSale() {
+        return productService.getGamesByOnSale(true);
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "new")
+    public List<Product> getGamesNew() {
+        return productService.getNewGames();
+    }
+
     @PostMapping
-    public ResponseEntity<Product> addGame(@Valid @RequestBody Product game) {
+    public ResponseEntity<Product> addGame(@Valid @RequestBody Product game/*, @RequestParam("file") MultipartFile file*/ ) {
+//        if (!file.isEmpty() && file.getOriginalFilename().length() > 0) {
+//            if (Pattern.matches("\\w+\\.(jpg|png)", file.getOriginalFilename())) {
+//                handleMultipartFile(file);
+//                game.setImageUrl(file.getOriginalFilename());
+//            } else {
+//                game.setImageUrl(null);
+//            }
+//        }
         Product created = productService.createGame(game);
         URI location = MvcUriComponentsBuilder
                 .fromMethodName(ProductController.class, "addGame", Product.class)
@@ -75,7 +106,7 @@ public class ProductController {
     }
 
     @PutMapping("{id}")
-    public Product update(@PathVariable("id") String id, @Valid @RequestBody Product game) {
+    public Product update(@PathVariable("id") Long id, @Valid @RequestBody Product game) {
         if (!id.equals(game.getId())) {
             throw new InvalidEntityIdException(String.format("Entity ID='%s' is different from URL resource ID='%s'", game.getId(), id));
         } else {
@@ -84,18 +115,20 @@ public class ProductController {
     }
 
     @DeleteMapping("{id}")
-    public Product remove(@PathVariable("id") String id) {
+    public Product remove(@PathVariable("id") Long id) {
         return productService.deleteGame(id);
     }
 
+    @CrossOrigin
     @GetMapping("/{id}/comments")
-    public List<Comment> getCommentsForGame(@PathVariable("id") String id) {
-        return commentService.getCommentsByGameId(id);
+    public List<Comment> getCommentsForGame(@PathVariable("id") Long id) {
+        Product product = productService.getGameById(id);
+        return commentService.getCommentsByProduct(product);
     }
 
     @GetMapping("/{id}/comments/{commentId}")
-    public Comment getCommentForGame(@PathVariable("id") String id, @PathVariable("commentId") String commentId) {
-        List<Comment> comments = commentService.getCommentsByGameId(id)
+    public Comment getCommentForGame(@PathVariable("id") Long id, @PathVariable("commentId") Long commentId) {
+        List<Comment> comments = commentService.getCommentsByProduct(productService.getGameById(id))
                 .stream()
                 .filter(comment -> comment.getId().equals(commentId))
                 .collect(Collectors.toList());
@@ -108,14 +141,14 @@ public class ProductController {
         URI location = MvcUriComponentsBuilder
                 .fromMethodName(ProductController.class, "addComment", Comment.class)
                 .pathSegment("{commentId}")
-                .buildAndExpand(comment.getGameId(), created.getId())
+                .buildAndExpand(comment.getProduct().getId(), created.getId())
                 .toUri();
         log.info("Comment created: {}", location);
         return ResponseEntity.created(location).body(created);
     }
 
     @PutMapping("{id}/comments/{commentId}")
-    public Comment editComment(@PathVariable("commentId") String commentId, @Valid @RequestBody Comment comment) {
+    public Comment editComment(@PathVariable("commentId") Long commentId, @Valid @RequestBody Comment comment) {
         if (!commentId.equals(comment.getId())) {
             throw new InvalidEntityIdException(String.format("Entity ID='%s' is different from URL resource ID='%s'", comment.getId(), commentId));
         } else {
@@ -124,7 +157,26 @@ public class ProductController {
     }
 
     @DeleteMapping("{id}/comments/{commentId}")
-    public Comment deleteComment(@PathVariable("commentId") String commentId) {
+    public Comment deleteComment(@PathVariable("commentId") Long commentId) {
         return commentService.deleteComment(commentId);
+    }
+
+    private void handleMultipartFile(MultipartFile file) {
+        String name = file.getOriginalFilename();
+        long size = file.getSize();
+        log.info("File: " + name + ", Size: " + size);
+        try {
+            File currentDir = new File(UPLOADS_DIR);
+            if(!currentDir.exists()) {
+                currentDir.mkdirs();
+            }
+            String path = currentDir.getAbsolutePath() + "/" + file.getOriginalFilename();
+            path = new File(path).getAbsolutePath();
+            log.info(path);
+            File f = new File(path);
+            FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(f));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

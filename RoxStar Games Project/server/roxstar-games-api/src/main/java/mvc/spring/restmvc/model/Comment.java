@@ -1,36 +1,48 @@
 package mvc.spring.restmvc.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-@Document(collection = "comments")
 @Data
+@Entity
+@Table(name = "comments")
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonPropertyOrder({"id", "text"})
 public class Comment {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @NonNull
     @Length(max = 240)
     private String text;
 
-    @NonNull
-    @Length(min = 24, max = 24)
-    private String gameId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    @JsonBackReference(value = "comment_product")
+    @ToString.Exclude
+    private Product product;
 
-    @NonNull
-    @Length(min = 24, max = 24)
-    private String userId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    @JsonBackReference(value = "comment_user")
+//    @JsonBackReference(value = "user_comment")
+    @ToString.Exclude
+    private User user; // can take only certain fields with a DTO
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime created = LocalDateTime.now();
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime created;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime edited = LocalDateTime.now();
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime edited;
 }

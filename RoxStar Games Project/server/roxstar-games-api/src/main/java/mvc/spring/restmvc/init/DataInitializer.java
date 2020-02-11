@@ -38,14 +38,14 @@ public class DataInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("Starting data initialization  ...");
-        Permission gameCreate = permService.createPermission(new Permission(Owner.OWN, Asset.GAME, Operation.WRITE));
+        Permission gameCreate = permService.createPermission(new Permission(Owner.OWN, Asset.GAME, Operation.CREATE));
         Permission gameRead = permService.createPermission(new Permission(Owner.ALL, Asset.GAME, Operation.READ));
-        Permission gameUpdate = permService.createPermission(new Permission(Owner.ALL, Asset.GAME, Operation.UPDATE));
-        Permission gameDelete = permService.createPermission(new Permission(Owner.ALL, Asset.GAME, Operation.DELETE));
+        Permission gameUpdate = permService.createPermission(new Permission(Owner.OWN, Asset.GAME, Operation.UPDATE));
+        Permission gameDelete = permService.createPermission(new Permission(Owner.OWN, Asset.GAME, Operation.DELETE));
         Permission ownUserRead = permService.createPermission(new Permission(Owner.OWN, Asset.USER, Operation.READ));
         Permission ownUserUpdate = permService.createPermission(new Permission(Owner.OWN, Asset.USER, Operation.UPDATE));
         Permission usersRead = permService.createPermission(new Permission(Owner.ALL, Asset.USER, Operation.READ));
-        Permission usersCreate = permService.createPermission(new Permission(Owner.ALL, Asset.USER, Operation.WRITE));
+        Permission usersCreate = permService.createPermission(new Permission(Owner.ALL, Asset.USER, Operation.CREATE));
         Permission usersUpdate = permService.createPermission(new Permission(Owner.ALL, Asset.USER, Operation.UPDATE));
         Permission usersDelete = permService.createPermission(new Permission(Owner.ALL, Asset.USER, Operation.DELETE));
         Role roleCustomer = roleService.createRole(new Role(UserProfile.CUSTOMER, Arrays.asList(gameRead, ownUserRead, ownUserUpdate)));
