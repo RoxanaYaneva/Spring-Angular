@@ -52,6 +52,7 @@ public class ProductController {
         return productService.getGamesByTitle(title);
     }
 
+    @CrossOrigin
     @GetMapping(params = "studio")
     public List<Product> getGamesByStudio(@RequestParam(value = "studio", required = true) String studio) {
         return productService.getGamesByStudio(studio);
@@ -63,11 +64,13 @@ public class ProductController {
         return productService.getGamesByPlatform(platform);
     }
 
+    @CrossOrigin
     @GetMapping(params = "genre")
     public List<Product> getGamesByGenre(@RequestParam(value = "genre", required = true) String genre) {
         return productService.getGamesByGenre(genre);
     }
 
+    @CrossOrigin
     @GetMapping(params = "type")
     public List<Product> getGamesByType(@RequestParam(value = "type", required = true) String type) {
         return productService.getGamesByType(type);

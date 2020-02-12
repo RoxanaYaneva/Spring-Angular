@@ -33,7 +33,7 @@ public class Comment {
     @ToString.Exclude
     private Product product;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference(value = "comment_user")
 //    @JsonBackReference(value = "user_comment")

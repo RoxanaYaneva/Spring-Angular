@@ -34,6 +34,7 @@ public class UserController {
         return service.getAllUsers();
     }
 
+    @CrossOrigin
     @GetMapping("{id}")
     public User getUser(@PathVariable("id") Long id) {
         return service.getUserById(id);
@@ -53,18 +54,19 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<User> update(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file, @Valid @RequestBody User user) {
+    @CrossOrigin
+    public ResponseEntity<User> update(@PathVariable("id") Long id, @Valid @RequestBody User user) {
         if (!id.equals(user.getId())) {
             throw new InvalidEntityIdException(String.format("Entity ID='%s' is different from URL resource ID='%s'", user.getId(), id));
         } else {
-            if (!file.isEmpty() && file.getOriginalFilename().length() > 0) {
-                if (Pattern.matches("\\w+\\.(jpg|png)", file.getOriginalFilename())) {
-                    handleMultipartFile(file);
-                    user.setImageUrl(file.getOriginalFilename());
-                } else {
-                    user.setImageUrl(null);
-                }
-            }
+//            if (!file.isEmpty() && file.getOriginalFilename().length() > 0) {
+//                if (Pattern.matches("\\w+\\.(jpg|png)", file.getOriginalFilename())) {
+//                    handleMultipartFile(file);
+//                    user.setImageUrl(file.getOriginalFilename());
+//                } else {
+//                    user.setImageUrl(null);
+//                }
+//            }
             User updated = service.updateUser(user);
             log.info("User updated: {}", updated);
             return ResponseEntity.ok(updated);
