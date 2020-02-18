@@ -5,7 +5,6 @@ import mvc.spring.restmvc.exception.InvalidEntityIdException;
 import mvc.spring.restmvc.model.User;
 import mvc.spring.restmvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/users")
@@ -26,24 +24,30 @@ import java.util.regex.Pattern;
 public class UserController {
 
     private static final String UPLOADS_DIR = "tmp";
+
+    private UserService userService;
+
     @Autowired
-    private UserService service;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping(value = {"", "/"})
+    @CrossOrigin
     public List<User> getUsers() {
-        return service.getAllUsers();
+        return userService.getAllUsers();
     }
 
     @CrossOrigin
     @GetMapping("{id}")
     public User getUser(@PathVariable("id") Long id) {
-        return service.getUserById(id);
+        return userService.getUserById(id);
     }
 
     @PostMapping
     @CrossOrigin
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-        User created = service.createUser(user);
+        User created = userService.createUser(user);
         URI location = MvcUriComponentsBuilder
                 .fromMethodName(UserController.class, "addUser", User.class)
                 .pathSegment("{id}")
@@ -67,7 +71,7 @@ public class UserController {
 //                    user.setImageUrl(null);
 //                }
 //            }
-            User updated = service.updateUser(user);
+            User updated = userService.updateUser(user);
             log.info("User updated: {}", updated);
             return ResponseEntity.ok(updated);
         }
@@ -75,7 +79,7 @@ public class UserController {
 
     @DeleteMapping("{id}")
     public User remove(@PathVariable("id") Long id) {
-        return service.deleteUser(id);
+        return userService.deleteUser(id);
     }
 
     private void handleMultipartFile(MultipartFile file) {
@@ -84,7 +88,7 @@ public class UserController {
         log.info("File: " + name + ", Size: " + size);
         try {
             File currentDir = new File(UPLOADS_DIR);
-            if(!currentDir.exists()) {
+            if (!currentDir.exists()) {
                 currentDir.mkdirs();
             }
             String path = currentDir.getAbsolutePath() + "/" + file.getOriginalFilename();

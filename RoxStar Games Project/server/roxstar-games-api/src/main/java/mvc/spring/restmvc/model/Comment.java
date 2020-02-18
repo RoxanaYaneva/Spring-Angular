@@ -1,16 +1,11 @@
 package mvc.spring.restmvc.model;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Data
 @Entity
@@ -18,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonPropertyOrder({"id", "text"})
+@Builder
 public class Comment {
 
     @Id
@@ -29,14 +25,11 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    @JsonBackReference(value = "comment_product")
     @ToString.Exclude
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference(value = "comment_user")
-//    @JsonBackReference(value = "user_comment")
     @ToString.Exclude
     private User user; // can take only certain fields with a DTO
 

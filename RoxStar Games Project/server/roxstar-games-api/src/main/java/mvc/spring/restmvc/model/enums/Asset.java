@@ -6,11 +6,11 @@ import lombok.Getter;
 
 
 @Getter
-@AllArgsConstructor(access= AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum Asset {
 
-    USER(1,"USER"),
-    GAME(2,"GAME");
+    USER(1, "USER"),
+    GAME(2, "GAME");
 
     private Integer id;
     private String description;

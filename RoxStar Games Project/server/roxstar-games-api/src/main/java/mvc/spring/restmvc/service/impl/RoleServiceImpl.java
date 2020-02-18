@@ -11,6 +11,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +19,12 @@ import java.util.Optional;
 @Slf4j
 public class RoleServiceImpl implements RoleService {
 
-    @Autowired
     private RoleRepository repo;
+
+    @Autowired
+    public void setRoleRepository(RoleRepository repo) {
+        this.repo = repo;
+    }
 
     @Override
     public List<Role> getAllRoles() {

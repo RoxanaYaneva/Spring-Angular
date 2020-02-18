@@ -10,8 +10,9 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     List<Order> findByUser(User user);
-    @Transactional(readOnly=true)
+
+    @Transactional(readOnly = true)
     List<Order> findByStatus(String status);
 }

@@ -24,13 +24,13 @@ public class WebConfiguration implements WebMvcConfigurer {
             @Override
             public void customize(TomcatServletWebServerFactory factory) {
                 factory.addConnectorCustomizers(
-                        (connector) -> {
-                            if ((connector.getProtocolHandler() instanceof AbstractHttp11Protocol<?>)) {
-                                //-1 means unlimited
-                                ((AbstractHttp11Protocol<?>) connector.getProtocolHandler()).setMaxSwallowSize(11534336); // 11 MB
-                            }
-                            connector.setMaxPostSize(11534336); // 11 MB
+                    (connector) -> {
+                        if ((connector.getProtocolHandler() instanceof AbstractHttp11Protocol<?>)) {
+                            //-1 means unlimited
+                            ((AbstractHttp11Protocol<?>) connector.getProtocolHandler()).setMaxSwallowSize(11534336); // 11 MB
                         }
+                        connector.setMaxPostSize(11534336); // 11 MB
+                    }
                 );
             }
         };

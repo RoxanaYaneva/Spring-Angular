@@ -3,7 +3,6 @@ package mvc.spring.restmvc.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -27,8 +26,8 @@ public class Role {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "permByRole",
-               joinColumns = @JoinColumn(name = "role_id"),
-               inverseJoinColumns = @JoinColumn(name = "permission_id"))
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id"))
     @JsonIgnore
     @ToString.Exclude
     private Collection<Permission> permissions;

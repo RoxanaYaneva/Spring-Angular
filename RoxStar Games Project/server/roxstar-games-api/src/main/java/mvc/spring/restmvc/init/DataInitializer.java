@@ -18,22 +18,36 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 @Component
 @Slf4j
 public class DataInitializer implements ApplicationRunner {
 
-    @Autowired
-    private ProductService gameService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
+    private ProductService productService;
     private RoleService roleService;
+    private UserService userService;
+    private PermissionService permService;
 
     @Autowired
-    private PermissionService permService;
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
+    }
+
+    @Autowired
+    public void setPermissionService(PermissionService permService) {
+        this.permService = permService;
+    }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -54,6 +68,6 @@ public class DataInitializer implements ApplicationRunner {
                 usersRead, usersCreate, usersUpdate, usersDelete)));
 
         userService.createUser(new User("admin@gmail.com", "admin123", "DEFAULT", "ADMIN",
-                Arrays.asList(roleAdmin)));
+                new HashSet<>(Arrays.asList(roleAdmin))));
     }
 }

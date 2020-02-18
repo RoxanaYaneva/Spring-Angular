@@ -1,6 +1,7 @@
 package mvc.spring.restmvc.exception;
 
 public class EntityAlreadyExistsException extends RuntimeException {
+
     public EntityAlreadyExistsException() {
     }
 

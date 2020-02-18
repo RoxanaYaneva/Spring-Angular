@@ -1,6 +1,7 @@
 package mvc.spring.restmvc.web;
 
 import lombok.extern.slf4j.Slf4j;
+import mvc.spring.restmvc.dto.InsertOrderDTO;
 import mvc.spring.restmvc.exception.InvalidEntityIdException;
 import mvc.spring.restmvc.model.Order;
 import mvc.spring.restmvc.service.OrderService;
@@ -18,8 +19,12 @@ import java.util.List;
 @Slf4j
 public class OrderController {
 
-    @Autowired
     private OrderService service;
+
+    @Autowired
+    public void setOrderService(OrderService orderService) {
+        this.service = orderService;
+    }
 
     @GetMapping(value = {"", "/"})
     public List<Order> getOrders() {
@@ -37,15 +42,16 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Order> addOrder(@Valid @RequestBody Order order) {
-        Order created = service.createOrder(order);
+    public ResponseEntity<Order> addOrder(@RequestBody InsertOrderDTO dto) {
+        Order order = service.getOrderFromInsertDTO(dto);
+        order = service.createOrder(order);
         URI location = MvcUriComponentsBuilder
                 .fromMethodName(OrderController.class, "addOrder", Order.class)
                 .pathSegment("{id}")
-                .buildAndExpand(created.getId())
+                .buildAndExpand(order.getId())
                 .toUri();
         log.info("Order created: {}", location);
-        return ResponseEntity.created(location).body(created);
+        return ResponseEntity.created(location).body(order);
     }
 
     @PutMapping("{id}")

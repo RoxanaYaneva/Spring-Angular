@@ -9,6 +9,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +17,12 @@ import java.util.Optional;
 @Slf4j
 public class PermissionServiceImpl implements PermissionService {
 
-    @Autowired
     private PermissionRepository repo;
+
+    @Autowired
+    public void setPermissionRepository(PermissionRepository repo) {
+        this.repo = repo;
+    }
 
     @Override
     public List<Permission> getAllPermissions() {

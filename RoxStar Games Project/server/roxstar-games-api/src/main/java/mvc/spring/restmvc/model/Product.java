@@ -2,12 +2,9 @@ package mvc.spring.restmvc.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import org.omg.CORBA.ServiceDetailHelper;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "products")
+@Builder
 public class Product {
 
     @Id
@@ -26,7 +24,7 @@ public class Product {
     private Long id;
 
     @Length(min = 1, max = 60)
-    @Column(unique=true)
+    @Column(unique = true)
     private String title;
 
     @Length(min = 2, max = 20)
@@ -52,12 +50,17 @@ public class Product {
 
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Builder.Default
     private LocalDateTime released = LocalDateTime.now();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    @JsonManagedReference(value = "comment_product")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JsonIgnore
     @ToString.Exclude
     private List<Comment> comments;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "pk.product")
+    @Setter(value = AccessLevel.NONE)
+    private List<OrderItem> orderItems;
 
 }

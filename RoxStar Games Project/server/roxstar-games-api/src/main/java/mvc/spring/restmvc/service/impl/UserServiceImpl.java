@@ -13,10 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,11 +23,18 @@ import java.util.stream.Collectors;
 @Validated
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private UserRepository repo;
+    private RoleService roleService;
 
     @Autowired
-    private RoleService roleService;
+    public void setUserRepository(UserRepository repo) {
+        this.repo = repo;
+    }
+
+    @Autowired
+    public void setRoleService(RoleService service) {
+        this.roleService = service;
+    }
 
     @Override
     public List<User> getAllUsers() {
@@ -52,13 +58,13 @@ public class UserServiceImpl implements UserService {
             user.setRegistered(LocalDateTime.now());
             user.setUpdated((LocalDateTime.now()));
             if (user.getRoles() == null || user.getRoles().isEmpty()) {
-                user.setRoles(Arrays.asList(roleService.getRoleByUserProfile(UserProfile.CUSTOMER).get()));
+                user.setRoles(new HashSet<>(Arrays.asList(roleService.getRoleByUserProfile(UserProfile.CUSTOMER).get())));
             } else {
-                List<Role> expandedRoles = user.getRoles().stream()
+                Set<Role> expandedRoles = user.getRoles().stream()
                         .map(role -> roleService.getRoleByUserProfile(role.getUserProfile()))
                         .filter(roleOpt -> roleOpt.isPresent())
                         .map(roleOpt -> roleOpt.get())
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toSet());
                 log.info(">>> Expanded roles: {}", expandedRoles);
                 user.setRoles(expandedRoles);
             }

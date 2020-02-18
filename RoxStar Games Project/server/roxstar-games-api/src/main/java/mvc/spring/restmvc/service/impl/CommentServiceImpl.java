@@ -2,14 +2,19 @@ package mvc.spring.restmvc.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import mvc.spring.restmvc.dao.CommentRepository;
+import mvc.spring.restmvc.dto.InsertCommentDTO;
 import mvc.spring.restmvc.exception.EntityNotFoundException;
 import mvc.spring.restmvc.model.Comment;
 import mvc.spring.restmvc.model.Product;
+import mvc.spring.restmvc.model.User;
 import mvc.spring.restmvc.service.CommentService;
+import mvc.spring.restmvc.service.ProductService;
+import mvc.spring.restmvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,8 +22,26 @@ import java.util.List;
 @Slf4j
 public class CommentServiceImpl implements CommentService {
 
-    @Autowired
     private CommentRepository repo;
+
+    private ProductService productService;
+
+    private UserService userService;
+
+    @Autowired
+    public void setCommentRepository(CommentRepository repo) {
+        this.repo = repo;
+    }
+
+    @Autowired
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public Comment getCommentById(Long id) {
@@ -31,6 +54,14 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> getCommentsByProduct(Product product) {
         if (product == null) return null;
         return repo.findByProduct(product);
+    }
+
+    @Override
+    public Comment getCommentFromInsertDTO(InsertCommentDTO dto) {
+        Comment comment = Comment.builder().user(User.builder().id(dto.getUserId()).build())
+                .text(dto.getText())
+                .product(Product.builder().id(dto.getProductId()).build()).build();
+        return comment;
     }
 
     @Override
@@ -49,6 +80,8 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public Comment insert(Comment comment) {
         comment.setId(null);
+        comment.setProduct(productService.getGameById(comment.getProduct().getId()));
+        comment.setUser(userService.getUserById(comment.getUser().getId())); // TODO : change to currently logged in user
         return repo.save(comment);
     }
 

@@ -16,8 +16,12 @@ import java.util.*;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
     private ProductRepository repo;
+
+    @Autowired
+    public void setProductRepository(ProductRepository repo) {
+        this.repo = repo;
+    }
 
     @Override
     public List<Product> getAllGames() {

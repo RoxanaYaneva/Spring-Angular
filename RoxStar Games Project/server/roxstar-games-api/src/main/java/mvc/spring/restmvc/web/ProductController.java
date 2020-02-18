@@ -1,6 +1,7 @@
 package mvc.spring.restmvc.web;
 
 import lombok.extern.slf4j.Slf4j;
+import mvc.spring.restmvc.dto.InsertCommentDTO;
 import mvc.spring.restmvc.exception.InvalidEntityIdException;
 import mvc.spring.restmvc.model.Comment;
 import mvc.spring.restmvc.model.Product;
@@ -28,11 +29,20 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     private static final String UPLOADS_DIR = "tmp";
-    @Autowired
+
+
     private ProductService productService;
+    private CommentService commentService;
 
     @Autowired
-    private CommentService commentService;
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @Autowired
+    public void setCommentService(CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     @CrossOrigin
     @GetMapping(value = {"", "/"})
@@ -89,7 +99,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> addGame(@Valid @RequestBody Product game/*, @RequestParam("file") MultipartFile file*/ ) {
+    public ResponseEntity<Product> addGame(@RequestBody Product game/*, @RequestParam("file") MultipartFile file*/) {
 //        if (!file.isEmpty() && file.getOriginalFilename().length() > 0) {
 //            if (Pattern.matches("\\w+\\.(jpg|png)", file.getOriginalFilename())) {
 //                handleMultipartFile(file);
@@ -98,6 +108,7 @@ public class ProductController {
 //                game.setImageUrl(null);
 //            }
 //        }
+
         Product created = productService.createGame(game);
         URI location = MvcUriComponentsBuilder
                 .fromMethodName(ProductController.class, "addGame", Product.class)
@@ -139,15 +150,16 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<Comment> addComment(@Valid @RequestBody Comment comment) {
-        Comment created = commentService.createComment(comment);
+    public ResponseEntity<Comment> addComment(@RequestBody InsertCommentDTO dto) {
+        Comment comment = commentService.getCommentFromInsertDTO(dto);
+        comment = commentService.createComment(comment);
         URI location = MvcUriComponentsBuilder
                 .fromMethodName(ProductController.class, "addComment", Comment.class)
                 .pathSegment("{commentId}")
-                .buildAndExpand(comment.getProduct().getId(), created.getId())
+                .buildAndExpand(comment.getProduct().getId(), comment.getId())
                 .toUri();
         log.info("Comment created: {}", location);
-        return ResponseEntity.created(location).body(created);
+        return ResponseEntity.created(location).body(comment);
     }
 
     @PutMapping("{id}/comments/{commentId}")
@@ -170,7 +182,7 @@ public class ProductController {
         log.info("File: " + name + ", Size: " + size);
         try {
             File currentDir = new File(UPLOADS_DIR);
-            if(!currentDir.exists()) {
+            if (!currentDir.exists()) {
                 currentDir.mkdirs();
             }
             String path = currentDir.getAbsolutePath() + "/" + file.getOriginalFilename();

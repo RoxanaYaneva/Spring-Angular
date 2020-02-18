@@ -3,7 +3,6 @@ package mvc.spring.restmvc.service;
 import mvc.spring.restmvc.model.Product;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductService {
     List<Product> getAllGames();
@@ -18,4 +17,5 @@ public interface ProductService {
     List<Product> getGamesByType(String type);
     List<Product> getGamesByOnSale(boolean onSale);
     List<Product> getNewGames();
+
 }

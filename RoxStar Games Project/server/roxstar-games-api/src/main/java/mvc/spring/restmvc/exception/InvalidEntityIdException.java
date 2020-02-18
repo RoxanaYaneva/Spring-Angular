@@ -1,6 +1,7 @@
 package mvc.spring.restmvc.exception;
 
 public class InvalidEntityIdException extends RuntimeException {
+
     public InvalidEntityIdException() {
     }
 

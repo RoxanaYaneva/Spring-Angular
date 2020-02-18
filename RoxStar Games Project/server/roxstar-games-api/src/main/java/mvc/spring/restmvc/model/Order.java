@@ -1,43 +1,39 @@
 package mvc.spring.restmvc.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import mvc.spring.restmvc.model.enums.OrderStatus;
 
 import javax.persistence.*;
-import javax.validation.Valid;
+import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "orders")
+@Builder
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private OrderStatus status;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @JsonBackReference(value = "order_user")
-    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @Valid
-    @ToString.Exclude
-    private List<OrderItem> products;
+//    @OneToOne(mappedBy="order", cascade=CascadeType.ALL)
+//    @Setter(value=AccessLevel.NONE)
+//    private Payment payment;
+
+    @OneToMany(mappedBy = "pk.order", cascade = CascadeType.ALL)
+    @Builder.Default
+    private Set<OrderItem> orderItems = new HashSet<>();
+
+    @Builder.Default
+    private OrderStatus status = OrderStatus.PENDING;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created;
@@ -45,19 +41,36 @@ public class Order {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updated;
 
-    @Transient
-    public Double getTotalOrderPrice() {
-        double sum = 0D;
-        List<OrderItem> orderProducts = getProducts();
-        for (OrderItem orderItem : orderProducts) {
-            sum += orderItem.getTotalPrice();
+    public Double getTotal() {
+        double total = 0d;
+        for (OrderItem item : orderItems) {
+            total += item.getSubTotal();
         }
-        return sum;
+        return total;
     }
 
-    @Transient
-    public int getNumberOfProducts() {
-        return this.products.size();
+    @Override
+    public String toString() {
+        Locale locale = new Locale("en", "US");
+        NumberFormat nf = NumberFormat.getCurrencyInstance(locale);
+        DateFormat dt = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+        StringBuilder builder = new StringBuilder();
+        builder.append("\nOrder number: #");
+        builder.append(getId());
+        builder.append(", Created: ");
+        builder.append(dt.format(getCreated()));
+        builder.append(", Customer: ");
+        builder.append(getUser().getEmail());
+//        builder.append(", Payment status: ");
+//        builder.append(getPayment().getPaymentStatus());
+        builder.append("\nDetails:\n");
+        for (OrderItem item : getOrderItems()) {
+            builder.append(item);
+            builder.append("\n");
+        }
+        builder.append("Total: ");
+        builder.append(nf.format(getTotal()));
+        return builder.toString();
     }
 
 }
