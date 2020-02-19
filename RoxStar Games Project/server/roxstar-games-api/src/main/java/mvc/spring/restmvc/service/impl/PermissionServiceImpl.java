@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,11 +21,6 @@ public class PermissionServiceImpl implements PermissionService {
     @Autowired
     public void setPermissionRepository(PermissionRepository repo) {
         this.repo = repo;
-    }
-
-    @Override
-    public List<Permission> getAllPermissions() {
-        return repo.findAll();
     }
 
     @Override
@@ -47,18 +41,4 @@ public class PermissionServiceImpl implements PermissionService {
         return repo.save(perm);
     }
 
-    @Override
-    public Permission updatePermission(Permission permission) {
-        return repo.save(permission);
-    }
-
-    @Override
-    public List<Permission> getPermissionsByAsset(String asset) {
-        return repo.findByAsset(asset);
-    }
-
-    @Override
-    public void deletePermission(Permission permission) {
-        repo.delete(permission);
-    }
 }

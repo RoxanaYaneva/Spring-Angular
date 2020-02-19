@@ -6,13 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     @Transactional(readOnly = true)
-    List<Order> findByUser(User user);
+    Set<Order> findByUser(User user);
 
     @Transactional(readOnly = true)
-    List<Order> findByStatus(String status);
+    Set<Order> findByStatus(String status);
 }

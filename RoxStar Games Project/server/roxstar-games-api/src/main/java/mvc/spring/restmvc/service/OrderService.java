@@ -4,12 +4,12 @@ import mvc.spring.restmvc.dto.InsertOrderDTO;
 import mvc.spring.restmvc.model.Order;
 import mvc.spring.restmvc.model.User;
 
-import java.util.List;
+import java.util.Set;
 
 public interface OrderService {
-    List<Order> getAllOrders();
-    List<Order> getOrdersByStatus(String status);
-    List<Order> getOrderByUser(User user);
+    Set<Order> getAllOrders();
+    Set<Order> getOrdersByStatus(String status);
+    Set<Order> getOrderByUser(User user);
     Order getOrderFromInsertDTO(InsertOrderDTO dto);
     Order getOrderById(Long id);
     Order createOrder(Order order);

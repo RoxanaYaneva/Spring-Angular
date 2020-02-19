@@ -8,6 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -45,11 +47,11 @@ public class User {
     @Builder.Default
     private String imageUrl = DEFAULT_IMAGE;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "roles_by_user",
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @ToString.Exclude
@@ -65,10 +67,10 @@ public class User {
     private boolean active = true;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime registered;
+    private LocalDateTime registered = LocalDateTime.now();
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updated;
+    private LocalDateTime updated = LocalDateTime.now();
 
     public User(Long id,
                 @NotNull @Length(min = 6, max = 40) String email,
@@ -104,45 +106,4 @@ public class User {
         this.roles = roles;
     }
 
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return roles.stream()
-//                .flatMap(role ->
-//                        Stream.concat(
-//                                Stream.of(new SimpleGrantedAuthority(role.getName())),
-//                                role.getPermissions().stream().map(perm -> new SimpleGrantedAuthority(perm.toString()))
-//
-//                        )
-//                ).collect(Collectors.toSet());
-//    }
-//
-//    @JsonIgnore
-//    public String getPassword() {
-//        return password;
-//    }
-//
-//    @Override
-//    public String getUsername() {
-//        return email;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonExpired() {
-//        return active;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonLocked() {
-//        return active;
-//    }
-//
-//    @Override
-//    public boolean isCredentialsNonExpired() {
-//        return active;
-//    }
-//
-//    @Override
-//    public boolean isEnabled() {
-//        return active;
-//    }
 }

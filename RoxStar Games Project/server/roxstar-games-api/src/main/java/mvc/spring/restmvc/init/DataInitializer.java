@@ -52,20 +52,20 @@ public class DataInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("Starting data initialization  ...");
-        Permission gameCreate = permService.createPermission(new Permission(Owner.OWN, Asset.GAME, Operation.CREATE));
-        Permission gameRead = permService.createPermission(new Permission(Owner.ALL, Asset.GAME, Operation.READ));
-        Permission gameUpdate = permService.createPermission(new Permission(Owner.OWN, Asset.GAME, Operation.UPDATE));
-        Permission gameDelete = permService.createPermission(new Permission(Owner.OWN, Asset.GAME, Operation.DELETE));
+        Permission productCreate = permService.createPermission(new Permission(Owner.OWN, Asset.GAME, Operation.CREATE));
+        Permission productRead = permService.createPermission(new Permission(Owner.ALL, Asset.GAME, Operation.READ));
+        Permission productUpdate = permService.createPermission(new Permission(Owner.OWN, Asset.GAME, Operation.UPDATE));
+        Permission productDelete = permService.createPermission(new Permission(Owner.OWN, Asset.GAME, Operation.DELETE));
         Permission ownUserRead = permService.createPermission(new Permission(Owner.OWN, Asset.USER, Operation.READ));
         Permission ownUserUpdate = permService.createPermission(new Permission(Owner.OWN, Asset.USER, Operation.UPDATE));
         Permission usersRead = permService.createPermission(new Permission(Owner.ALL, Asset.USER, Operation.READ));
         Permission usersCreate = permService.createPermission(new Permission(Owner.ALL, Asset.USER, Operation.CREATE));
         Permission usersUpdate = permService.createPermission(new Permission(Owner.ALL, Asset.USER, Operation.UPDATE));
         Permission usersDelete = permService.createPermission(new Permission(Owner.ALL, Asset.USER, Operation.DELETE));
-        Role roleCustomer = roleService.createRole(new Role(UserProfile.CUSTOMER, Arrays.asList(gameRead, ownUserRead, ownUserUpdate)));
-        Role roleProdSupplier = roleService.createRole(new Role(UserProfile.PROD_SUPPLIER, Arrays.asList(gameRead, gameCreate, gameUpdate, gameDelete, ownUserRead, ownUserUpdate)));
-        Role roleAdmin = roleService.createRole(new Role(UserProfile.ADMIN, Arrays.asList(gameRead, ownUserRead, ownUserUpdate,
-                usersRead, usersCreate, usersUpdate, usersDelete)));
+        Role roleCustomer = roleService.createRole(new Role(UserProfile.CUSTOMER, new HashSet<>(Arrays.asList(productRead, ownUserRead, ownUserUpdate))));
+        Role roleProdSupplier = roleService.createRole(new Role(UserProfile.PROD_SUPPLIER, new HashSet<>(Arrays.asList(productRead, productCreate, productUpdate, productDelete, ownUserRead, ownUserUpdate))));
+        Role roleAdmin = roleService.createRole(new Role(UserProfile.ADMIN, new HashSet<>(Arrays.asList(productRead, ownUserRead, ownUserUpdate,
+                usersRead, usersCreate, usersUpdate, usersDelete))));
 
         userService.createUser(new User("admin@gmail.com", "admin123", "DEFAULT", "ADMIN",
                 new HashSet<>(Arrays.asList(roleAdmin))));

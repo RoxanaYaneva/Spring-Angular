@@ -37,8 +37,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return repo.findAll();
+    public Set<User> getAllUsers() {
+        return new HashSet<>(repo.findAll());
     }
 
     @Override

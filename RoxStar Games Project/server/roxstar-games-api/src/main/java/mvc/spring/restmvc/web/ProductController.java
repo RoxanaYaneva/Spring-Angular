@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -44,74 +45,64 @@ public class ProductController {
         this.commentService = commentService;
     }
 
-    @CrossOrigin
     @GetMapping(value = {"", "/"})
-    public List<Product> getGames() {
-        return productService.getAllGames();
+    public Set<Product> getProducts() {
+        return productService.getAllProducts();
     }
 
-    @CrossOrigin
     @GetMapping("{id}")
-    public Product getGame(@PathVariable("id") Long id) {
-        return productService.getGameById(id);
+    public Product getProduct(@PathVariable("id") Long id) {
+        return productService.getProductById(id);
     }
 
-    @CrossOrigin
     @GetMapping(params = "title")
-    public Product getGamesByTitle(@RequestParam(value = "title", required = true) String title) {
-        return productService.getGamesByTitle(title);
+    public Product getProductsByTitle(@RequestParam(value = "title", required = true) String title) {
+        return productService.getProductsByTitle(title);
     }
 
-    @CrossOrigin
     @GetMapping(params = "studio")
-    public List<Product> getGamesByStudio(@RequestParam(value = "studio", required = true) String studio) {
-        return productService.getGamesByStudio(studio);
+    public Set<Product> getProductsByStudio(@RequestParam(value = "studio", required = true) String studio) {
+        return productService.getProductsByStudio(studio);
     }
 
-    @CrossOrigin
     @GetMapping(params = "platform")
-    public List<Product> getGamesByPlatform(@RequestParam(value = "platform", required = true) String platform) {
-        return productService.getGamesByPlatform(platform);
+    public Set<Product> getProductsByPlatform(@RequestParam(value = "platform", required = true) String platform) {
+        return productService.getProductsByPlatform(platform);
     }
 
-    @CrossOrigin
     @GetMapping(params = "genre")
-    public List<Product> getGamesByGenre(@RequestParam(value = "genre", required = true) String genre) {
-        return productService.getGamesByGenre(genre);
+    public Set<Product> getProductsByGenre(@RequestParam(value = "genre", required = true) String genre) {
+        return productService.getProductsByGenre(genre);
     }
 
-    @CrossOrigin
     @GetMapping(params = "type")
-    public List<Product> getGamesByType(@RequestParam(value = "type", required = true) String type) {
-        return productService.getGamesByType(type);
+    public Set<Product> getProductsByType(@RequestParam(value = "type", required = true) String type) {
+        return productService.getProductsByType(type);
     }
 
-    @CrossOrigin
     @GetMapping(value = "onSale")
-    public List<Product> getGamesByOnSale() {
-        return productService.getGamesByOnSale(true);
+    public Set<Product> getProductsByOnSale() {
+        return productService.getProductsByOnSale(true);
     }
 
-    @CrossOrigin
     @GetMapping(value = "new")
-    public List<Product> getGamesNew() {
-        return productService.getNewGames();
+    public Set<Product> getProductsNew() {
+        return productService.getNewProducts();
     }
 
     @PostMapping
-    public ResponseEntity<Product> addGame(@RequestBody Product game/*, @RequestParam("file") MultipartFile file*/) {
+    public ResponseEntity<Product> addProduct(@RequestBody Product product/*, @RequestParam("file") MultipartFile file*/) {
 //        if (!file.isEmpty() && file.getOriginalFilename().length() > 0) {
 //            if (Pattern.matches("\\w+\\.(jpg|png)", file.getOriginalFilename())) {
 //                handleMultipartFile(file);
-//                game.setImageUrl(file.getOriginalFilename());
+//                product.setImageUrl(file.getOriginalFilename());
 //            } else {
-//                game.setImageUrl(null);
+//                product.setImageUrl(null);
 //            }
 //        }
-
-        Product created = productService.createGame(game);
+        Product created = productService.createProduct(product);
         URI location = MvcUriComponentsBuilder
-                .fromMethodName(ProductController.class, "addGame", Product.class)
+                .fromMethodName(ProductController.class, "addProduct", Product.class)
                 .pathSegment("{id}")
                 .buildAndExpand(created.getId())
                 .toUri();
@@ -120,29 +111,28 @@ public class ProductController {
     }
 
     @PutMapping("{id}")
-    public Product update(@PathVariable("id") Long id, @Valid @RequestBody Product game) {
-        if (!id.equals(game.getId())) {
-            throw new InvalidEntityIdException(String.format("Entity ID='%s' is different from URL resource ID='%s'", game.getId(), id));
+    public Product update(@PathVariable("id") Long id, @Valid @RequestBody Product product) {
+        if (!id.equals(product.getId())) {
+            throw new InvalidEntityIdException(String.format("Entity ID='%s' is different from URL resource ID='%s'", product.getId(), id));
         } else {
-            return productService.updateGame(game);
+            return productService.updateProduct(product);
         }
     }
 
     @DeleteMapping("{id}")
     public Product remove(@PathVariable("id") Long id) {
-        return productService.deleteGame(id);
+        return productService.deleteProduct(id);
     }
 
-    @CrossOrigin
     @GetMapping("/{id}/comments")
-    public List<Comment> getCommentsForGame(@PathVariable("id") Long id) {
-        Product product = productService.getGameById(id);
+    public Set<Comment> getCommentsForProduct(@PathVariable("id") Long id) {
+        Product product = productService.getProductById(id);
         return commentService.getCommentsByProduct(product);
     }
 
     @GetMapping("/{id}/comments/{commentId}")
-    public Comment getCommentForGame(@PathVariable("id") Long id, @PathVariable("commentId") Long commentId) {
-        List<Comment> comments = commentService.getCommentsByProduct(productService.getGameById(id))
+    public Comment getCommentForProduct(@PathVariable("id") Long id, @PathVariable("commentId") Long commentId) {
+        List<Comment> comments = commentService.getCommentsByProduct(productService.getProductById(id))
                 .stream()
                 .filter(comment -> comment.getId().equals(commentId))
                 .collect(Collectors.toList());

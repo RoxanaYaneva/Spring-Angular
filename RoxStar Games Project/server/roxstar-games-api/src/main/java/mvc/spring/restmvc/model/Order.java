@@ -36,10 +36,10 @@ public class Order {
     private OrderStatus status = OrderStatus.PENDING;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime created;
+    private LocalDateTime created = LocalDateTime.now();
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updated;
+    private LocalDateTime updated = LocalDateTime.now();
 
     public Double getTotal() {
         double total = 0d;

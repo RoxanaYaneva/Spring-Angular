@@ -31,11 +31,11 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "user_id")
     @ToString.Exclude
-    private User user; // can take only certain fields with a DTO
+    private User user;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime created;
+    private LocalDateTime created = LocalDateTime.now();
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime edited;
+    private LocalDateTime edited = LocalDateTime.now();
 }

@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/users")
@@ -33,19 +33,16 @@ public class UserController {
     }
 
     @GetMapping(value = {"", "/"})
-    @CrossOrigin
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return userService.getAllUsers();
     }
 
-    @CrossOrigin
     @GetMapping("{id}")
     public User getUser(@PathVariable("id") Long id) {
         return userService.getUserById(id);
     }
 
     @PostMapping
-    @CrossOrigin
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
         User created = userService.createUser(user);
         URI location = MvcUriComponentsBuilder
@@ -58,7 +55,6 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    @CrossOrigin
     public ResponseEntity<User> update(@PathVariable("id") Long id, @Valid @RequestBody User user) {
         if (!id.equals(user.getId())) {
             throw new InvalidEntityIdException(String.format("Entity ID='%s' is different from URL resource ID='%s'", user.getId(), id));

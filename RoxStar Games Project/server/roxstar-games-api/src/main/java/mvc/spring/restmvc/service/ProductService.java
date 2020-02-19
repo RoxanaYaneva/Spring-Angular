@@ -2,20 +2,20 @@ package mvc.spring.restmvc.service;
 
 import mvc.spring.restmvc.model.Product;
 
-import java.util.List;
+import java.util.Set;
 
 public interface ProductService {
-    List<Product> getAllGames();
-    Product getGameById(Long id);
-    Product createGame(Product game);
-    Product updateGame(Product game);
-    Product deleteGame(Long id);
-    Product getGamesByTitle(String title);
-    List<Product> getGamesByGenre(String genre);
-    List<Product> getGamesByStudio(String studio);
-    List<Product> getGamesByPlatform(String platform);
-    List<Product> getGamesByType(String type);
-    List<Product> getGamesByOnSale(boolean onSale);
-    List<Product> getNewGames();
+    Set<Product> getAllProducts();
+    Product getProductById(Long id);
+    Product createProduct(Product product);
+    Product updateProduct(Product product);
+    Product deleteProduct(Long id);
+    Product getProductsByTitle(String title);
+    Set<Product> getProductsByGenre(String genre);
+    Set<Product> getProductsByStudio(String studio);
+    Set<Product> getProductsByPlatform(String platform);
+    Set<Product> getProductsByType(String type);
+    Set<Product> getProductsByOnSale(boolean onSale);
+    Set<Product> getNewProducts();
 
 }

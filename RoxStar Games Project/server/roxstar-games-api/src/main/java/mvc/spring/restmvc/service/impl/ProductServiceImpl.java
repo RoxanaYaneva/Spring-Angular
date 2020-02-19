@@ -24,81 +24,81 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAllGames() {
-        return repo.findAll();
+    public Set<Product> getAllProducts() {
+        return new HashSet<>(repo.findAll());
     }
 
     @Override
-    public Product getGameById(Long id) {
+    public Product getProductById(Long id) {
         if (id == null) return null;
         return repo.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Game with ID=%s does not exist.", id)));
     }
 
     @Override
-    public Product createGame(Product game) {
-        Product result = repo.findByTitle(game.getTitle());
+    public Product createProduct(Product product) {
+        Product result = repo.findByTitle(product.getTitle());
         if (result != null) {
-            throw new EntityAlreadyExistsException(String.format("Game with that title exists.", game));
+            throw new EntityAlreadyExistsException(String.format("Game with that title exists.", product));
         } else {
-            log.info("Creating default game: {}", game);
-            return insert(game);
+            log.info("Creating default game: {}", product);
+            return insert(product);
         }
     }
 
     @Transactional
-    public Product insert(Product game) {
-        game.setId(null);
-        return repo.save(game);
+    public Product insert(Product product) {
+        product.setId(null);
+        return repo.save(product);
     }
 
     @Override
-    public Product updateGame(Product game) {
-        return repo.save(game);
+    public Product updateProduct(Product product) {
+        return repo.save(product);
     }
 
     @Override
-    public Product deleteGame(Long id) {
-        Product old = getGameById(id);
+    public Product deleteProduct(Long id) {
+        Product old = getProductById(id);
         repo.deleteById(id);
         return old;
     }
 
     @Override
-    public Product getGamesByTitle(String title) {
+    public Product getProductsByTitle(String title) {
         return repo.findByTitle(title);
     }
 
     @Override
-    public List<Product> getGamesByGenre(String genre) {
+    public Set<Product> getProductsByGenre(String genre) {
         return repo.findByGenre(genre);
     }
 
     @Override
-    public List<Product> getGamesByStudio(String studio) {
+    public Set<Product> getProductsByStudio(String studio) {
         return repo.findByStudio(studio);
     }
 
     @Override
-    public List<Product> getGamesByPlatform(String platform) {
+    public Set<Product> getProductsByPlatform(String platform) {
         return repo.findByPlatform(platform);
     }
 
     @Override
-    public List<Product> getGamesByType(String type) {
+    public Set<Product> getProductsByType(String type) {
         return repo.findByType(type);
     }
 
     @Override
-    public List<Product> getGamesByOnSale(boolean onSale) {
+    public Set<Product> getProductsByOnSale(boolean onSale) {
         return repo.findByOnSale(onSale);
     }
 
     @Override
-    public List<Product> getNewGames() {
+    public Set<Product> getNewProducts() {
         List<Product> products = repo.findAll();
         products.sort((p2, p1) -> p1.getReleased().compareTo(p2.getReleased()));
-        return products;
+        return new HashSet<>(products);
 
     }
 }

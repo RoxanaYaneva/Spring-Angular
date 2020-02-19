@@ -2,7 +2,6 @@ package mvc.spring.restmvc.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import mvc.spring.restmvc.dao.RoleRepository;
-import mvc.spring.restmvc.exception.EntityNotFoundException;
 import mvc.spring.restmvc.model.Role;
 import mvc.spring.restmvc.model.enums.UserProfile;
 import mvc.spring.restmvc.service.RoleService;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,17 +22,6 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     public void setRoleRepository(RoleRepository repo) {
         this.repo = repo;
-    }
-
-    @Override
-    public List<Role> getAllRoles() {
-        return repo.findAll();
-    }
-
-    @Override
-    public Role getRoleById(Long id) {
-        return repo.findById(id).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Role with id=%s does not exist", id)));
     }
 
     @Override
@@ -56,17 +43,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role updateRole(Role role) {
-        return repo.save(role);
-    }
-
-    @Override
     public Optional<Role> getRoleByUserProfile(UserProfile userProfile) {
         return repo.findByUserProfile(userProfile);
     }
 
-    @Override
-    public void deleteRole(Role role) {
-        repo.delete(role);
-    }
 }

@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -27,7 +27,7 @@ public class OrderController {
     }
 
     @GetMapping(value = {"", "/"})
-    public List<Order> getOrders() {
+    public Set<Order> getOrders() {
         return service.getAllOrders();
     }
 
@@ -37,7 +37,7 @@ public class OrderController {
     }
 
     @GetMapping(params = "status")
-    public List<Order> getOrdersWithStatus(@RequestParam(value = "status", required = true) String status) {
+    public Set<Order> getOrdersWithStatus(@RequestParam(value = "status", required = true) String status) {
         return service.getOrdersByStatus(status);
     }
 

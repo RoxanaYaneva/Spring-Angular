@@ -1,15 +1,13 @@
 package mvc.spring.restmvc.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import mvc.spring.restmvc.model.enums.UserProfile;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.Set;
 
 @JsonPropertyOrder({"id", "name", "permissions"})
 @Data
@@ -25,21 +23,19 @@ public class Role {
     private UserProfile userProfile;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "permByRole",
+    @JoinTable(name = "perm_by_role",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
-    @JsonIgnore
-    @ToString.Exclude
-    private Collection<Permission> permissions;
+    private Set<Permission> permissions;
 
-    @ManyToMany(mappedBy = "roles")
-    @JsonIgnore
-    @ToString.Exclude
-    private Collection<User> users;
+//    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "roles")
+//    @JsonIgnore
+//    @ToString.Exclude
+//    private Set<User> users;
 
     @JsonCreator
     @java.beans.ConstructorProperties({"name", "permissions"})
-    public Role(UserProfile userProfile, Collection<Permission> permissions) {
+    public Role(UserProfile userProfile, Set<Permission> permissions) {
         this.userProfile = userProfile;
         this.permissions = permissions;
     }

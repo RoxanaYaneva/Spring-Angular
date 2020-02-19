@@ -1,5 +1,6 @@
 package mvc.spring.restmvc.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import mvc.spring.restmvc.model.enums.Asset;
 import mvc.spring.restmvc.model.enums.Operation;
@@ -27,6 +28,7 @@ public class Permission {
 
     @ManyToMany(mappedBy = "permissions")
     @ToString.Exclude
+    @JsonIgnore
     private Collection<Role> roles;
 
     public Permission(Owner owner, Asset asset, Operation operation) {

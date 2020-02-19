@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -51,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentsByProduct(Product product) {
+    public Set<Comment> getCommentsByProduct(Product product) {
         if (product == null) return null;
         return repo.findByProduct(product);
     }
@@ -80,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public Comment insert(Comment comment) {
         comment.setId(null);
-        comment.setProduct(productService.getGameById(comment.getProduct().getId()));
+        comment.setProduct(productService.getProductById(comment.getProduct().getId()));
         comment.setUser(userService.getUserById(comment.getUser().getId())); // TODO : change to currently logged in user
         return repo.save(comment);
     }

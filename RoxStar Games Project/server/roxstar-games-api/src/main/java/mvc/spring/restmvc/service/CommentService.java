@@ -4,10 +4,10 @@ import mvc.spring.restmvc.dto.InsertCommentDTO;
 import mvc.spring.restmvc.model.Comment;
 import mvc.spring.restmvc.model.Product;
 
-import java.util.List;
+import java.util.Set;
 
 public interface CommentService {
-    List<Comment> getCommentsByProduct(Product product);
+    Set<Comment> getCommentsByProduct(Product product);
     Comment getCommentFromInsertDTO(InsertCommentDTO dto);
     Comment getCommentById(Long id);
     Comment updateComment(Comment comment);

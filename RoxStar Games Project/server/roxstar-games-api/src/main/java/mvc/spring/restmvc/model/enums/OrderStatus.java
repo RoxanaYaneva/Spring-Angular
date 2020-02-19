@@ -6,7 +6,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-
 public enum OrderStatus {
 
     PENDING(1, "Pending"),
