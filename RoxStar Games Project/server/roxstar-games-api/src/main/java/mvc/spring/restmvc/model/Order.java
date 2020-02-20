@@ -21,12 +21,8 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-
-//    @OneToOne(mappedBy="order", cascade=CascadeType.ALL)
-//    @Setter(value=AccessLevel.NONE)
-//    private Payment payment;
 
     @OneToMany(mappedBy = "pk.order", cascade = CascadeType.ALL)
     @Builder.Default
@@ -36,9 +32,11 @@ public class Order {
     private OrderStatus status = OrderStatus.PENDING;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Builder.Default
     private LocalDateTime created = LocalDateTime.now();
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Builder.Default
     private LocalDateTime updated = LocalDateTime.now();
 
     public Double getTotal() {
@@ -61,8 +59,6 @@ public class Order {
         builder.append(dt.format(getCreated()));
         builder.append(", Customer: ");
         builder.append(getUser().getEmail());
-//        builder.append(", Payment status: ");
-//        builder.append(getPayment().getPaymentStatus());
         builder.append("\nDetails:\n");
         for (OrderItem item : getOrderItems()) {
             builder.append(item);

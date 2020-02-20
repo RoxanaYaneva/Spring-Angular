@@ -28,14 +28,16 @@ public class Comment {
     @ToString.Exclude
     private Product product;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     private User user;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Builder.Default
     private LocalDateTime created = LocalDateTime.now();
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Builder.Default
     private LocalDateTime edited = LocalDateTime.now();
 }

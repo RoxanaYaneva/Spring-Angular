@@ -1,6 +1,8 @@
 package mvc.spring.restmvc.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import mvc.spring.restmvc.model.Role;
 import mvc.spring.restmvc.model.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +15,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Getter
+@Setter
 public class UserPrincipal implements UserDetails {
 
     private Long id;
@@ -61,18 +65,9 @@ public class UserPrincipal implements UserDetails {
                 ).collect(Collectors.toSet());
     }
 
-    public Long getId() {
-        return id;
-    }
-
     @Override
     public String getUsername() {
         return email;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
     }
 
     @Override

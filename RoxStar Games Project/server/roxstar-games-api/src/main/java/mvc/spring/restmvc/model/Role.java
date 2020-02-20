@@ -28,15 +28,11 @@ public class Role {
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private Set<Permission> permissions;
 
-//    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "roles")
-//    @JsonIgnore
-//    @ToString.Exclude
-//    private Set<User> users;
-
     @JsonCreator
     @java.beans.ConstructorProperties({"name", "permissions"})
     public Role(UserProfile userProfile, Set<Permission> permissions) {
         this.userProfile = userProfile;
         this.permissions = permissions;
     }
+
 }

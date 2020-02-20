@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
-import org.omg.CORBA.ServiceDetailHelper;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

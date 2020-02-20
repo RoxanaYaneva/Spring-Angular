@@ -11,6 +11,7 @@ import java.util.Locale;
 
 @Data
 @Entity
+@Table(name = "order_item")
 @NoArgsConstructor
 public class OrderItem {
 
