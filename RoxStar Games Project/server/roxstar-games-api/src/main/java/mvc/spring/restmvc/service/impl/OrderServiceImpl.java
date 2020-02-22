@@ -11,6 +11,7 @@ import mvc.spring.restmvc.service.OrderService;
 import mvc.spring.restmvc.service.ProductService;
 import mvc.spring.restmvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +24,7 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     private OrderRepository repo;
-
     private ProductService productService;
-
     private UserService userService;
 
     @Autowired
@@ -44,22 +43,26 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public Set<Order> getAllOrders() {
         return new HashSet<>(repo.findAll());
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ALL_ORDER_READ')")
     public Set<Order> getOrdersByStatus(String status) {
         return repo.findByStatus(status);
     }
 
     @Override
-    public Set<Order> getOrderByUser(User user) {
+    @PreAuthorize("#user.email == authentication.name or hasRole('ADMIN')")
+    public Set<Order> getOrdersByUser(User user) {
         if (user == null) return null;
         return repo.findByUser(user);
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public Order getOrderById(Long id) {
         if (id == null) return null;
         return repo.findById(id).orElseThrow(() ->
@@ -72,7 +75,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Transactional
-    public Order insert(Order order) {
+    private Order insert(Order order) {
         order.setId(null);
         order.setCreated(LocalDateTime.now());
         order.setUpdated(LocalDateTime.now());
@@ -99,12 +102,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public Order updateOrder(Order order) {
         order.setUpdated(LocalDateTime.now());
         return repo.save(order);
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public Order deleteOrder(Long id) {
         Order old = getOrderById(id);
         repo.deleteById(id);

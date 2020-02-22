@@ -8,11 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum OrderStatus {
 
-    PENDING(1, "Pending"),
-    CLEARED(2, "Cleared"),
-    CANCELED(3, "Canceled"),
-    SHIPPED(4, "Shipped");
+    PENDING, CLEARED, CANCELED, SHIPPED;
 
-    private Integer id;
-    private String description;
 }

@@ -1,9 +1,8 @@
 package mvc.spring.restmvc.web;
 
 import lombok.extern.slf4j.Slf4j;
-import mvc.spring.restmvc.dao.RoleRepository;
-import mvc.spring.restmvc.dao.UserRepository;
 import mvc.spring.restmvc.exception.AppException;
+import mvc.spring.restmvc.exception.EntityAlreadyExistsException;
 import mvc.spring.restmvc.model.Role;
 import mvc.spring.restmvc.model.User;
 import mvc.spring.restmvc.model.enums.UserProfile;
@@ -12,8 +11,9 @@ import mvc.spring.restmvc.payload.JwtAuthenticationResponse;
 import mvc.spring.restmvc.payload.LoginRequest;
 import mvc.spring.restmvc.payload.SignUpRequest;
 import mvc.spring.restmvc.security.JwtTokenProvider;
+import mvc.spring.restmvc.service.RoleService;
+import mvc.spring.restmvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,10 +40,10 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Autowired
-    RoleRepository roleRepository;
+    RoleService roleService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -69,9 +69,8 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if(userRepository.findByEmail(signUpRequest.getEmail()).isPresent()) {
-            return new ResponseEntity<>(new ApiResponse(false, "Email is already taken!"),
-                    HttpStatus.BAD_REQUEST);
+        if(userService.getUserByEmail(signUpRequest.getEmail()) != null) {
+            throw new EntityAlreadyExistsException(String.format("Email %s is already taken!", signUpRequest.getEmail()));
         }
 
         User user = new User(signUpRequest.getEmail(), signUpRequest.getPassword(),
@@ -79,14 +78,11 @@ public class AuthController {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        Role customerRole = roleRepository.findByUserProfile(UserProfile.CUSTOMER)
+        Role customerRole = roleService.getRoleByUserProfile(UserProfile.ROLE_CUSTOMER)
                 .orElseThrow(() -> new AppException("Customer Role not set."));
-
         user.setRoles(new HashSet<>(Arrays.asList(customerRole)));
 
-        log.info(">>>>> User {} :", user);
-
-        User result = userRepository.save(user);
+        User result = userService.createUser(user);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/users/{id}")

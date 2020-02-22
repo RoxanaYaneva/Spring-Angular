@@ -25,7 +25,6 @@ public class UserPrincipal implements UserDetails {
 
     private String lastName;
 
-    @JsonIgnore
     private String email;
 
     @JsonIgnore
@@ -59,7 +58,7 @@ public class UserPrincipal implements UserDetails {
         return roles.stream()
                 .flatMap(role ->
                         Stream.concat(
-                                Stream.of(new SimpleGrantedAuthority(role.getUserProfile().getDescription())),
+                                Stream.of(new SimpleGrantedAuthority(role.getRole().name())),
                                 role.getPermissions().stream().map(perm -> new SimpleGrantedAuthority(perm.toString()))
                         )
                 ).collect(Collectors.toSet());

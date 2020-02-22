@@ -11,6 +11,8 @@ import mvc.spring.restmvc.service.CommentService;
 import mvc.spring.restmvc.service.ProductService;
 import mvc.spring.restmvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +25,7 @@ import java.util.Set;
 public class CommentServiceImpl implements CommentService {
 
     private CommentRepository repo;
-
     private ProductService productService;
-
     private UserService userService;
 
     @Autowired
@@ -58,13 +58,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment getCommentFromInsertDTO(InsertCommentDTO dto) {
-        Comment comment = Comment.builder().user(User.builder().id(dto.getUserId()).build())
+        return Comment.builder().user(User.builder().id(dto.getUserId()).build())
                 .text(dto.getText())
                 .product(Product.builder().id(dto.getProductId()).build()).build();
-        return comment;
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public Comment updateComment(Comment comment) {
         comment.setEdited(LocalDateTime.now());
         return repo.save(comment);
@@ -78,14 +78,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Transactional
-    public Comment insert(Comment comment) {
+    private Comment insert(Comment comment) {
         comment.setId(null);
         comment.setProduct(productService.getProductById(comment.getProduct().getId()));
-        comment.setUser(userService.getUserById(comment.getUser().getId())); // TODO : change to currently logged in user
+        comment.setUser(userService.getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName()));
         return repo.save(comment);
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public Comment deleteComment(Long id) {
         Comment old = getCommentById(id);
         repo.deleteById(id);

@@ -9,6 +9,8 @@ import mvc.spring.restmvc.model.enums.UserProfile;
 import mvc.spring.restmvc.service.RoleService;
 import mvc.spring.restmvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -37,6 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PostFilter("filterObject.email == authentication.name or hasAuthority('ALL_USER_READ')")
     public Set<User> getAllUsers() {
         return new HashSet<>(repo.findAll());
     }
@@ -49,6 +52,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        Optional<User> result = repo.findByEmail(email);
+        return result.isPresent() ? result.get() : null;
+    }
+
+    @Override
     public User createUser(User user) {
         Optional<User> result = repo.findByEmail(user.getEmail());
         if (result.isPresent()) {
@@ -58,10 +67,10 @@ public class UserServiceImpl implements UserService {
             user.setRegistered(LocalDateTime.now());
             user.setUpdated((LocalDateTime.now()));
             if (user.getRoles() == null || user.getRoles().isEmpty()) {
-                user.setRoles(new HashSet<>(Arrays.asList(roleService.getRoleByUserProfile(UserProfile.CUSTOMER).get())));
+                user.setRoles(new HashSet<>(Arrays.asList(roleService.getRoleByUserProfile(UserProfile.ROLE_CUSTOMER).get())));
             } else {
                 Set<Role> expandedRoles = user.getRoles().stream()
-                        .map(role -> roleService.getRoleByUserProfile(role.getUserProfile()))
+                        .map(role -> roleService.getRoleByUserProfile(role.getRole()))
                         .filter(roleOpt -> roleOpt.isPresent())
                         .map(roleOpt -> roleOpt.get())
                         .collect(Collectors.toSet());
@@ -75,19 +84,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public User insert(User user) {
-        //Forcing to insert a new user instead of updating
+    private User insert(User user) {
         user.setId(null);
         return repo.save(user);
     }
 
     @Override
+    @PreAuthorize("#user.email == authentication.name or hasAuthority('ALL_USER_UPDATE')")
     public User updateUser(User user) {
         user.setUpdated(LocalDateTime.now());
         return repo.save(user);
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public User deleteUser(Long id) {
         User old = getUserById(id);
         repo.deleteById(id);

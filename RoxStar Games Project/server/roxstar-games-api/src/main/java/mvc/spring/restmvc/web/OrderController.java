@@ -5,6 +5,7 @@ import mvc.spring.restmvc.dto.InsertOrderDTO;
 import mvc.spring.restmvc.exception.InvalidEntityIdException;
 import mvc.spring.restmvc.model.Order;
 import mvc.spring.restmvc.service.OrderService;
+import mvc.spring.restmvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +21,16 @@ import java.util.Set;
 public class OrderController {
 
     private OrderService service;
+    private UserService userService;
 
     @Autowired
     public void setOrderService(OrderService orderService) {
         this.service = orderService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping(value = {"", "/"})
@@ -39,6 +46,11 @@ public class OrderController {
     @GetMapping(params = "status")
     public Set<Order> getOrdersWithStatus(@RequestParam(value = "status", required = true) String status) {
         return service.getOrdersByStatus(status);
+    }
+
+    @GetMapping(params = "userId")
+    public Set<Order> getOrdersByUser(@RequestParam(value = "userId", required = true) Long userId) {
+        return service.getOrdersByUser(userService.getUserById(userId));
     }
 
     @PostMapping

@@ -32,6 +32,6 @@ public class Permission {
 
     @Override
     public String toString() {
-        return this.getOwner().getDescription() + "_" + this.getAsset().getDescription() + "_" + this.getOperation().getDescription();
+        return this.getOwner() + "_" + this.getAsset() + "_" + this.getOperation();
     }
 }

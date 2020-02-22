@@ -8,10 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum Asset {
 
-    USER(1, "USER"),
-    GAME(2, "GAME");
+    USER, GAME, ORDER;
 
-    private Integer id;
-    private String description;
 }
 

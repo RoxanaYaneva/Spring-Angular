@@ -10,7 +10,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
 
 @Service
@@ -26,12 +25,12 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role createRole(Role role) {
-        Role probe = new Role(role.getUserProfile(), null); // TODO:  check what happens here !!!!!!
+        Role probe = new Role(role.getRole(), null);
         Optional<Role> result = repo.findOne(Example.of(probe));
         if (result.isPresent()) {
             return result.get();
         } else {
-            log.info(String.format("Inserting new role: {}", role));
+            log.info(String.format("Inserting new role=%s", role.toString()));
             return insert(role);
         }
     }
@@ -44,7 +43,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Optional<Role> getRoleByUserProfile(UserProfile userProfile) {
-        return repo.findByUserProfile(userProfile);
+        return repo.findByRole(userProfile);
     }
 
 }

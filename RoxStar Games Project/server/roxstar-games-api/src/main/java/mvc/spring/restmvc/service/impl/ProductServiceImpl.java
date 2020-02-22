@@ -7,10 +7,13 @@ import mvc.spring.restmvc.exception.EntityNotFoundException;
 import mvc.spring.restmvc.model.Product;
 import mvc.spring.restmvc.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -35,11 +38,13 @@ public class ProductServiceImpl implements ProductService {
                 new EntityNotFoundException(String.format("Game with ID=%s does not exist.", id)));
     }
 
+
     @Override
+    @PreAuthorize("hasRole('PROD_SUPPLIER')")
     public Product createProduct(Product product) {
         Product result = repo.findByTitle(product.getTitle());
         if (result != null) {
-            throw new EntityAlreadyExistsException(String.format("Game with that title exists.", product));
+            throw new EntityAlreadyExistsException(String.format("Game with title=%s already exists!", product.getTitle()));
         } else {
             log.info("Creating default game: {}", product);
             return insert(product);
@@ -47,12 +52,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Transactional
-    public Product insert(Product product) {
+    private Product insert(Product product) {
         product.setId(null);
         return repo.save(product);
     }
 
     @Override
+    @PreAuthorize("#product.studio == authentication.name and hasRole('PROD_SUPPLIER')")
     public Product updateProduct(Product product) {
         return repo.save(product);
     }

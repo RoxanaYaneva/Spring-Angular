@@ -8,10 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum UserProfile {
 
-    ADMIN(1, "ROLE_ADMIN"),
-    CUSTOMER(2, "ROLE_CUSTOMER"),
-    PROD_SUPPLIER(3, "ROLE_PROD_SUPPLIER");
+    ROLE_ADMIN, ROLE_CUSTOMER, ROLE_PROD_SUPPLIER
 
-    private int id;
-    private String description;
 }

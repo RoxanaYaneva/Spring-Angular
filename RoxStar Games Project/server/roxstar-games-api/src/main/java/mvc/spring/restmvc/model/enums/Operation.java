@@ -8,11 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum Operation {
 
-    READ(1, "READ"),
-    CREATE(2, "CREATE"),
-    UPDATE(3, "UPDATE"),
-    DELETE(4, "DELETE");
+    READ, CREATE, UPDATE, DELETE;
 
-    private Integer id;
-    private String description;
 }

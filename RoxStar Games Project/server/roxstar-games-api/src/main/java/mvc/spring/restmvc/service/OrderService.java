@@ -9,7 +9,7 @@ import java.util.Set;
 public interface OrderService {
     Set<Order> getAllOrders();
     Set<Order> getOrdersByStatus(String status);
-    Set<Order> getOrderByUser(User user);
+    Set<Order> getOrdersByUser(User user);
     Order getOrderFromInsertDTO(InsertOrderDTO dto);
     Order getOrderById(Long id);
     Order createOrder(Order order);

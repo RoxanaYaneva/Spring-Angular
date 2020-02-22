@@ -20,7 +20,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private UserProfile userProfile;
+    private UserProfile role;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "perm_by_role",
@@ -31,7 +31,7 @@ public class Role {
     @JsonCreator
     @java.beans.ConstructorProperties({"name", "permissions"})
     public Role(UserProfile userProfile, Set<Permission> permissions) {
-        this.userProfile = userProfile;
+        this.role = userProfile;
         this.permissions = permissions;
     }
 

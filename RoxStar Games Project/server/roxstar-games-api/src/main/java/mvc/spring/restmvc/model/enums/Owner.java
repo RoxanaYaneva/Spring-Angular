@@ -8,9 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum Owner {
 
-    OWN(1, "OWN"),
-    ALL(2, "ALL");
+    OWN, ALL;
 
-    private Integer id;
-    private String description;
 }

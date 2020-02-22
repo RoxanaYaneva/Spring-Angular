@@ -9,7 +9,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
 
 @Service
@@ -30,7 +29,7 @@ public class PermissionServiceImpl implements PermissionService {
         if (result.isPresent()) {
             return result.get();
         } else {
-            log.info(String.format("Inserting new permission: {}", permission));
+            log.info(String.format("Inserting new permission=%s", permission.toString()));
             return insert(permission);
         }
     }
