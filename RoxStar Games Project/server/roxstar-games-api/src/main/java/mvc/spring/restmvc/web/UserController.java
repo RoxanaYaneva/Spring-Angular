@@ -67,7 +67,6 @@ public class UserController {
 //                    user.setImageUrl(null);
 //                }
 //            }
-            log.info(String.format("going to update user: %s", user.getEmail()));
             User updated = userService.updateUser(user);
             log.info("User updated: {}", updated);
             return ResponseEntity.ok(updated);

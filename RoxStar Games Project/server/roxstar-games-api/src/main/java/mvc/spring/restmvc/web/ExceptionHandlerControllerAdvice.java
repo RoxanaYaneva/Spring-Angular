@@ -7,6 +7,7 @@ import mvc.spring.restmvc.exception.EntityAlreadyExistsException;
 import mvc.spring.restmvc.payload.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,5 +41,11 @@ public class ExceptionHandlerControllerAdvice {
     public ResponseEntity<ApiResponse> handle(AccessDeniedException e) {
         log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiResponse(false, e.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ApiResponse> handle(BadCredentialsException e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(false, e.getMessage()));
     }
 }

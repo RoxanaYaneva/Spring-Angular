@@ -30,7 +30,7 @@ public class RoleServiceImpl implements RoleService {
         if (result.isPresent()) {
             return result.get();
         } else {
-            log.info(String.format("Inserting new role=%s", role.toString()));
+            log.info("Inserting new role {}", role);
             return insert(role);
         }
     }

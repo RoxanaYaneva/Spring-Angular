@@ -29,7 +29,7 @@ public class PermissionServiceImpl implements PermissionService {
         if (result.isPresent()) {
             return result.get();
         } else {
-            log.info(String.format("Inserting new permission=%s", permission.toString()));
+            log.info("Inserting new permission {}", permission);
             return insert(permission);
         }
     }
