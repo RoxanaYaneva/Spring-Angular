@@ -1,11 +1,9 @@
 import React from 'react';
 import { withStyles } from "@material-ui/core/styles";
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import styles from './FormStyle.jsx';
 import Container from '@material-ui/core/Container';
@@ -34,7 +32,7 @@ class AddProduct extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const uri = '/api/products';
-    var game = { title : this.state.title, platform : this.state.platform, genre : this.state.genre, type : this.state.type}; // add to studio field currently logged in user
+    var game = { title: this.state.title, platform: this.state.platform, genre: this.state.genre, type: this.state.type }; // add to studio field currently logged in user
     sendRequest(uri, 'POST',
       JSON.stringify(game),
       (response) => {
@@ -54,10 +52,10 @@ class AddProduct extends React.Component {
           <Typography variant="h5">
             Add product
           </Typography>
-          <form style={{marginBottom: 40}} className={classes.form} noValidate onSubmit={this.handleSubmit}>
+          <form style={{ marginBottom: 40 }} className={classes.form} noValidate onSubmit={this.handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-              <input type='file' id='single' className={classes.upload} onChange={this.onChange} /> 
+                <input type='file' id='single' className={classes.upload} onChange={this.onChange} />
               </Grid>
               <Grid item xs={12}>
                 <TextField

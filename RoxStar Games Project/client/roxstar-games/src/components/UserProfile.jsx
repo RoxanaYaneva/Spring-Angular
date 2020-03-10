@@ -1,7 +1,6 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Grid, CssBaseline, Container, TextField, withStyles } from '@material-ui/core';
+import { Typography, Button, Grid, CssBaseline, Container, TextField, withStyles } from '@material-ui/core';
 import GTA from "../assets/images/maleIcon.png";
-import { NavLink } from 'react-router-dom';
 import sendRequest from '../Request';
 
 const styles = theme => ({
@@ -37,7 +36,6 @@ class UserProfile extends React.Component {
   componentDidMount() {
     const uri = `/api/users/5`;
     sendRequest(uri, 'GET', {}, (response) => {
-        // notify.show('You registered successfully', 'success', 1500);
         this.setState( {user : response} );
     });
   }
@@ -59,10 +57,7 @@ class UserProfile extends React.Component {
     sendRequest(uri, 'PUT',
       JSON.stringify(user),
       (response) => {
-        // notify.show('You registered successfully', 'success', 1500);
-        if (response) {
-          this.props.history.push('/');
-        }
+        // notify.show('You updated your info successfully', 'success', 1500);
       });
   }
 
@@ -102,7 +97,6 @@ class UserProfile extends React.Component {
                   required
                   fullWidth
                   id="lastName"
-                  
                   name="lastName"
                   autoComplete="lname"
                   value={this.state.user.lastName}
@@ -117,7 +111,7 @@ class UserProfile extends React.Component {
                   fullWidth
                   id="email"
                   name="email"
-                  value="roxy@gmail.com"
+                  value=""
                   readonly
                 />
               </Grid>
@@ -130,7 +124,7 @@ class UserProfile extends React.Component {
                   name="password"
                   type="password"
                   id="password"
-                  onChange={ e => this.setState({ password : e.target.value})}
+                  onChange={ e  => this.setState({ password : e.target.value})}
                 />
               </Grid>
             </Grid>

@@ -17,11 +17,17 @@ const styles = theme => ({
     padding: 7,
     backgroundColor: "#fcf4e8"
   },
+  title : {
+    
+  },
   platform: {
-    backgroundColor: "pink"
+    backgroundColor: "pink",
+    color: "red",
+    fontWeight: "bold"
   },
   media: {
-    height: 230
+    height: 230,
+    maxWidth: 290
   },
   button: {
     backgroundColor: "salmon",
@@ -42,19 +48,15 @@ class GameCard extends React.Component {
     this.state = { product: {},  qty: 0 };
   }
 
-  handleClick = () =>  {
-    window.location.href = '/game/' + this.props.game.id;
-  }
-
 
   render() {
     const { classes } = this.props;
     return (
       <React.Fragment>
         <Card className={classes.card} raised>
-          <Link to={'/game/'+this.props.game.id}>
+          <Link to={'/game/' + this.props.game.id} style={{textDecoration: "none"}}>
             <img src={"/images/" + this.props.game.imageUrl} className={classes.media} alt="product" />
-            <CardHeader title={this.props.game.title} style={{ backgroundColor: "salmon", 
+            <CardHeader title={this.props.game.title} style={{ backgroundColor: "salmon",  color : "darkred",
                                                                             border: "2px solid darkred", height: 50}} />
             <Typography className={classes.platform} variant="h6">{this.props.game.platform}</Typography>
           </Link>
@@ -71,7 +73,9 @@ class GameCard extends React.Component {
             }
           </CardContent>
           <CardActions disableSpacing>
+          <Link to={'/game/'+this.props.game.id}>
             <Button className={classes.button} onClick={this.handleClick}>View game</Button>
+            </Link>
           </CardActions>
         </Card>
       </React.Fragment>

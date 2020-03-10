@@ -36,15 +36,12 @@ class Register extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const uri = '/api/users';
+    const uri = '/api/auth/register';
     var user = { firstName : this.state.firstName, lastName : this.state.lastName, email : this.state.email, password : this.state.password };
     sendRequest(uri, 'POST',
       JSON.stringify(user),
       (response) => {
-        // notify.show('You registered successfully', 'success', 1500);
-        if (response) {
-          this.props.history.push('/');
-        }
+        notify.show('You registered successfully', 'success', 1500);
       });
   }
 
@@ -60,7 +57,7 @@ class Register extends React.Component {
           <Typography component="h1" variant="h5">
             Register
           </Typography>
-          <form style={{marginBottom: 40}} className={classes.form} noValidate onSubmit={this.handleSubmit}>
+          <form className={classes.form} noValidate onSubmit={this.handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField

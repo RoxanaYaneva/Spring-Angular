@@ -13,6 +13,7 @@ import Contacts from './components/Contacts';
 import GameDetail from './components/GameDetail';
 import UserProfile from './components/UserProfile';
 import AddProduct from './components/AddProduct';
+import AdminPanel from './components/AdminPanel';
 
 
 class App extends React.Component {
@@ -22,7 +23,7 @@ class App extends React.Component {
         <div style={{ backgroundColor: "lightyellow" }}>
           <Notifications options={{ zIndex: 200, top: 20 }} />
           <Header />
-          <div style={{marginTop: 100}}>
+          <div style={{marginTop: 100, minHeight: 710}}>
             <Route path="/" component={Home} exact />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
@@ -33,6 +34,7 @@ class App extends React.Component {
             <Route path="/catalogue" component={GameCatalogue} />
             <Route path="/account" component={UserProfile} />
             <Route path="/addProduct" component={AddProduct} />
+            <Route path="/adminPanel" component={AdminPanel} />
           </div>
         </div>
         <Footer />

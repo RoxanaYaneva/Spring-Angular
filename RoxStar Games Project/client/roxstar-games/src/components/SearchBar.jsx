@@ -45,8 +45,8 @@ const styles = theme => ({
 });
 
 class SearchBar extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { input: '' };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -59,16 +59,18 @@ class SearchBar extends React.Component {
 
   keyPressed(event) {
     if (event.key === "Enter") {
-      this.submit();
+      this.submit(event);
     }
   }
 
-  submit = () => {
-    console.log(this.state.input);
+  submit = (event) => {
+    event.preventDefault();
     const uri = `/api/products?title=${this.state.input}`;
     sendRequest(uri, 'GET', {}, (response) => {
       this.setState({ product: response });
       if (this.state.product !== undefined) {
+        // this.props.history.push(`/game/${this.state.product.id}`);
+        // // window.location.reload(false);      
         window.location.href = `/game/${this.state.product.id}`;
       } else {
         window.location.href = `/game/0`;

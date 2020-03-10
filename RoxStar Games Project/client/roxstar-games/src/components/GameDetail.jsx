@@ -12,7 +12,7 @@ const styles = theme => ({
   },
   media: {
     height: 300,
-    width: "auto"
+    maxWidth: 400
   },
   text: {
     fontWeight: "bold",
@@ -166,15 +166,20 @@ class GameDetail extends React.Component {
               Comments
             </Typography>
             <Divider />
+            {this.props.userId &&
             <Grid>
               <br />
-              <Typography>Roxana Yaneva</Typography>
+              <Typography>{this.props.userId}</Typography>
               <textarea className={classes.textarea} onChange={e => this.setState({text : e.target.value})}
                         defaultValue={this.state.text} placeholder="Maximum 240 characters..."></textarea>
-              <input className={classes.submit} onClick={this.handleSubmit} type="submit" name="submit" value="Submit" />
+              <input className={classes.submit} onClick={this.handleSubmit} type="submit" name="submit" value="Submit" />  
             </Grid>
+            } 
+            {this.state.comments && this.state.comments.lenght > 0 ? 
             <CommentSection comments={this.state.comments} />
-            <Divider />
+            :
+            <Typography variant="h6">No comments yet!</Typography>
+            }
           </Grid>
         </Grid>
       </div>

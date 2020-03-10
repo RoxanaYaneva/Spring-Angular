@@ -25,7 +25,7 @@ var CustomAppBar = (props) => {
           </Grid>
           <Grid item xs={1} >
             <Button color="inherit">
-              <NavLink to={props.link}>view all &gt;</NavLink>
+              <NavLink to={props.link} style={{color: "white", textDecoration : "none", fontWeight: "bold"}}>view all &gt;</NavLink>
             </Button>
           </Grid>
         </Grid>
@@ -64,7 +64,7 @@ class Home extends React.Component {
               Telephone: +359 89 432 354
             </Typography>
           </Grid>
-          <Grid item xs={8} className={classes.rowGames}>
+          <Grid item xs={8} style={{marginBottom : 50}}>
             <CustomAppBar text="New And Upcoming Releases" link="/catalogue/new" />
             <Grid container spacing={2}>
               {this.state.products.slice(0,4).map(game =>

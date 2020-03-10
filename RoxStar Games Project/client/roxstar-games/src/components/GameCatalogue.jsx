@@ -2,16 +2,16 @@ import React from 'react';
 import sendRequest from '../Request.js';
 import Grid from "@material-ui/core/Grid";
 import GameCard from './GameCard.jsx';
-import { MenuList, MenuItem, withStyles } from '@material-ui/core'; 
+import { MenuList, MenuItem, withStyles } from '@material-ui/core';
 
 const styles = theme => ({
-  menu : {
+  menu: {
     color: "darkred",
     fontWeight: "bold",
     fontSize: 25,
     borderRight: "3px solid darkred"
   },
-  list : {
+  list: {
     marginBottom: 20
   }
 });
@@ -19,7 +19,7 @@ const styles = theme => ({
 class GameCatalogue extends React.Component {
   constructor() {
     super();
-    this.state = { products: [] , pages : 0 };
+    this.state = { products: [], pages: 0 };
   }
 
   componentDidMount() {
@@ -77,13 +77,13 @@ class GameCatalogue extends React.Component {
           </Grid>
           <Grid item xs={1}></Grid>
           <Grid item xs={6}>
-            <Grid style={{marginBottom: 15}} container justify="flex-start" spacing={3}>
-                {this.state.products.map(game =>
-                  <Grid item xs={4}>
-                     <GameCard key={game.id} game={game} />
-                  </Grid>
-                )}
-            </Grid>   
+            <Grid style={{ marginBottom: 15 }} container justify="flex-start" spacing={3}>
+              {this.state.products.map(game =>
+                <Grid item xs={4}>
+                  <GameCard key={game.id} game={game} />
+                </Grid>
+              )}
+            </Grid>
           </Grid>
         </Grid>
       </div>

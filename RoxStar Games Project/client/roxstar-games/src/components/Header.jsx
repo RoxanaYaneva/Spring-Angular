@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Grid, Toolbar, AppBar, Button, Paper, Tabs, Tab } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { withStyles } from "@material-ui/core/styles";
-import LOGO1 from '../assets/images/bottom.png';
+import LOGO1 from '../assets/images/bottom1.png';
 import Searchbar from './SearchBar.jsx';
 
 const styles = theme => ({
@@ -35,6 +35,10 @@ const styles = theme => ({
 });
 
 class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { input: '' };
+  }
   render() {
     const { classes } = this.props;
     return (
@@ -45,9 +49,11 @@ class Header extends React.Component {
               <Grid container spacing={2} justify="flex-end">
                 <Grid item xs={6} sm={4}>
                   <Toolbar className={classes.toolbar}>
+                    {/* <Button>
+                      <NavLink to="/adminPanel">My pannel</NavLink>
+                    </Button> */}
                     <Button>
                       <NavLink to="/account">My Account</NavLink>
-                      {/* <NavLink to="/adminPanel">My pannel</NavLink> */}
                     </Button>
                     <Button>
                       <NavLink to="/login">Login</NavLink>
@@ -63,11 +69,11 @@ class Header extends React.Component {
           </Grid>
           <Grid item xs={4}>
             <NavLink to="/">
-              <img src={LOGO1} alt="logo" style={{ width: 155, float: "right", marginBottom: 10 }} />
+              <img src={LOGO1} alt="logo" style={{ width: 250, float: "right" , marginTop: -30}} />
             </NavLink>
           </Grid>
           <Grid item xs={5} className={classes.searchbar}>
-            <Searchbar />
+            <Searchbar history={this.props.history} />
           </Grid>
         </Grid>
         <Grid item xs={12}>
@@ -78,7 +84,7 @@ class Header extends React.Component {
                 <Tab className={classes.tab} label="Shop By Platform" to='/catalogue' component={NavLink} />
                 <Tab className={classes.tab} label="Shop By Genre" to='/catalogue' component={NavLink} />
                 <Tab className={classes.tab} label="Shop By Type" to='/catalogue' component={NavLink} />
-                <Tab className={classes.tab} label="On Sale" to='/catalogue' component={NavLink} />
+                <Tab className={classes.tab} label="On Sale" to='/catalogue/onSale' component={NavLink} />
               </Tabs>
             </Paper>
           </AppBar>

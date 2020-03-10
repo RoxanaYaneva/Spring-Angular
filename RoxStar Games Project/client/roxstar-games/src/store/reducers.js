@@ -8,6 +8,7 @@ import {
 const initState = {
   products: [],
   userId: '',
+  token : ''
 }
 
 function mainReducer(state = initState, action) {
@@ -32,10 +33,11 @@ function mainReducer(state = initState, action) {
     }
     case LOGIN: {
       let newUserId = action.userId;
+      let newToken = action.token;
       return {
         ...state,
         userId: newUserId,
-        
+        token: newToken
       }
     }
     default:
